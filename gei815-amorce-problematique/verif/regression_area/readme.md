@@ -1,0 +1,1 @@
+Répertoire pour vmanager (régressions)

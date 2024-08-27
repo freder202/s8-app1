@@ -1,0 +1,35 @@
+This file is used to keep functions to add to the registers_sv_pkg.sv. Since the project IP-XACT doesn't create these funstions. 
+--> Put comment on write for read-only registers
+
+
+
+
+
+***********************************************FUNCTIONS TO ADD TO registers_sv_pkg.sv****************************************************
+function registers_struct_type reset_write_only_registers(registers_struct_type registers);
+   registers_struct_type r;
+   r = registers;
+   
+   // Strobe registers
+   r.DisableFlagSync = DisableFlagSync_reset_value[$bits(registers.DisableFlagSync)-1:0];
+   return r;
+endfunction
+
+function registers_struct_type write_on_read_only_registers(bit [31:0] data, int address,
+                                                            registers_struct_type registers);
+   registers_struct_type r;
+   r = registers;
+   case(address)
+         DataMode_addr: r.DataMode = data[$bits(registers.DataMode)-1:0];
+         TensionMode_addr: r.TensionMode = data[$bits(registers.TensionMode)-1:0];
+         EnableCntRate_addr: r.EnableCntRate = data[$bits(registers.EnableCntRate)-1:0];
+         EnableEventCntRate_addr: r.EnableEventCntRate = data[$bits(registers.EnableEventCntRate)-1:0];
+         Threshold_addr: r.Threshold = data[$bits(registers.Threshold)-1:0];
+         SrcSelected_addr: r.SrcSelected = data[$bits(registers.SrcSelected)-1:0];
+         FlagSyncError_addr: r.FlagSyncError = data[$bits(registers.FlagSyncError)-1:0];
+         DisableFlagSync_addr: r.DisableFlagSync = data[$bits(registers.DisableFlagSync)-1:0];
+   endcase // case address
+   return r;
+endfunction
+
+******************************************************************************************************************************************

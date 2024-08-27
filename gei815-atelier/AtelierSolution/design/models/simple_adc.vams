@@ -1,0 +1,57 @@
+//////////////////////////////////////////////////////////////////////
+// Author  :    Marc-Andre Tetrault
+// Project :    Verification Primer
+//
+// Universite de Sherbrooke
+//////////////////////////////////////////////////////////////////////
+//
+// Adapted from https://en.wikipedia.org/wiki/Verilog-AMS
+//
+//////////////////////////////////////////////////////////////////////
+`timescale 1ps/10fs
+
+// Simple ADC model
+module simple_adc(clk, wave, en, dout);
+
+	// Parameters
+	parameter bits = 8; // Number of bits
+	parameter td = 500; // Processing delay of the ADC
+
+	parameter vref = 1.0;
+
+
+
+	// Define input/output
+	input clk, en;
+    input wave;
+    wreal wave;
+
+	output [7:0] dout;
+	reg [7:0] dout;
+
+	initial begin
+		dout = 8'b0;
+	end
+
+    real sample;
+    real remainder;
+    integer i;
+    // Perform sampling in the digital blocks for rising clock edge
+	always @(posedge clk) begin
+
+		sample = wave;
+		remainder = vref;
+
+		for(i=bits-1; i>=0; i=i-1) begin
+			remainder = remainder/2;
+
+			if(sample > remainder) begin
+				dout[i] <= #(td) 1;
+				sample = sample - remainder;
+			end
+			else begin
+				dout[i] <= #(td) 0;
+            end
+		end
+	end
+endmodule

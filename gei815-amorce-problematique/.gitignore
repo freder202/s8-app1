@@ -1,0 +1,14 @@
+
+cocotb-env/
+
+simdir/
+
+.idea/
+
+**/__pycache__/
+
+verif/vmgr_db
+
+verif/regression_area/ex*
+
+verif/regression_area/vmgr*

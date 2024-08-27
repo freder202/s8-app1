@@ -1,0 +1,47 @@
+//////////////////////////////////////////////////////////////////////
+// Author  :    Marc-Andre Tetrault
+// Project :    Verification Primer
+//
+// Universite de Sherbrooke
+//////////////////////////////////////////////////////////////////////
+//
+// Adapted from https://en.wikipedia.org/wiki/Verilog-AMS
+//
+//////////////////////////////////////////////////////////////////////
+
+`timescale 1ps/10fs
+
+// Simple DAC model
+module simple_dac(aout, clk, din);
+
+	// Parameters
+	parameter integer bits = 8;
+	parameter integer td = 500; // Processing delay of the DAC
+    parameter vref = 1.0;
+
+	// Define input/output
+	input clk;
+	input [bits-1:0] din;
+	output aout;
+
+	//Define port types
+	wreal  aout;
+
+	// Internal variables
+	real aout_new, reference;
+    real aout_calc;
+	integer i;
+
+	// Change signal in the analog part
+	always @(posedge clk) begin // Change output only for rising clock edge
+		aout_new = 0;
+		reference = vref;
+
+		for(i=7; i>= 0; i=i-1) begin
+			reference = reference/2;
+			aout_new = aout_new + reference * din[i];
+		end
+	end
+
+    assign aout = aout_new;
+endmodule

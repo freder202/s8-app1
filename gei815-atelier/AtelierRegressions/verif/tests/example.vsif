@@ -1,0 +1,27 @@
+//////////////////////////////////////////////////////////////////////
+// Author  :    Marc-Andre Tetrault
+// Project :    Verification Primer
+//
+// Universite de Sherbrooke
+//////////////////////////////////////////////////////////////////////
+
+session example_session {
+    top_dir : $ENV(VMANAGER_REGRESSIONS_AREA);
+    //drm : <text>serial local</text>;
+    drm : <text>parallel local</text>;
+    max_runs_in_parallel : 2;
+
+    queuing_policy : vsif_order;
+};
+
+group example_group {
+    // scan script arguments are minimum default values
+    //  these are provided by the INCISIVE tool
+    scan_script: "vm_scan.pl ius.flt shell.flt";
+
+    run_mode : batch;
+    run_script : $ENV(VERIF_ROOT)/scripts/do_vmanager_runsim.tcsh;
+
+    test sanity {count : 1;};
+    test sanity_random {count : 10;};
+};

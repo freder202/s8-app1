@@ -1,0 +1,170 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<spirit:component xmlns:spirit="http://www.spiritconsortium.org/XMLSchema/SPIRIT/1.5" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+    <spirit:vendor>vendor</spirit:vendor>
+    <spirit:library>library</spirit:library>
+    <spirit:name>registers</spirit:name>
+    <spirit:version>version</spirit:version>
+    <spirit:memoryMaps>
+        <spirit:memoryMap>
+            <spirit:name>registers</spirit:name>
+            <spirit:addressBlock>
+                <spirit:name>registers</spirit:name>
+                <spirit:baseAddress>0</spirit:baseAddress>
+                <spirit:range>10</spirit:range>
+                <spirit:width>32</spirit:width>
+
+                <spirit:register>
+                    <spirit:name>DataMode</spirit:name>
+                    <spirit:description>The mode for the data acquisition</spirit:description>
+                    <spirit:addressOffset>0</spirit:addressOffset>
+                    <spirit:size>2</spirit:size>
+                    <spirit:access>read-write</spirit:access>
+                    <spirit:field>
+                        <spirit:name>Mode</spirit:name>
+                        <spirit:description>Mode : 0 =&gt; Debug, 1 =&gt; compact, 2,3 =&gt; nothing for now</spirit:description>
+                        <spirit:bitOffset>0</spirit:bitOffset>
+                        <spirit:bitWidth>2</spirit:bitWidth>
+                    </spirit:field>
+                </spirit:register>
+
+                <spirit:register>
+                    <spirit:name>TensionMode</spirit:name>
+                    <spirit:description>Tension mode of the FPGA</spirit:description>
+                    <spirit:addressOffset>1</spirit:addressOffset>
+                    <spirit:size>2</spirit:size>
+                    <spirit:access>read-write</spirit:access>
+                    <spirit:field>
+                        <spirit:name>Mode</spirit:name>
+                        <spirit:description>Mode : 0 =&gt; low, 1 =&gt; high, 2,3 =&gt; nothing for now</spirit:description>
+                        <spirit:bitOffset>0</spirit:bitOffset>
+                        <spirit:bitWidth>2</spirit:bitWidth>
+                    </spirit:field>
+                </spirit:register>
+
+                <spirit:register>
+                    <spirit:name>EnableCntRate</spirit:name>
+                    <spirit:description>Enable the count rate of all events</spirit:description>
+                    <spirit:addressOffset>2</spirit:addressOffset>
+                    <spirit:size>1</spirit:size>
+                    <spirit:access>read-write</spirit:access>
+                    <spirit:field>
+                        <spirit:name>Enable</spirit:name>
+                        <spirit:description>1 =&gt; true, 0 =&gt; false</spirit:description>
+                        <spirit:bitOffset>0</spirit:bitOffset>
+                        <spirit:bitWidth>1</spirit:bitWidth>
+                    </spirit:field>
+                </spirit:register>
+
+                <spirit:register>
+                    <spirit:name>EnableEventCntRate</spirit:name>
+                    <spirit:description>Enable the count rate for only good events</spirit:description>
+                    <spirit:addressOffset>3</spirit:addressOffset>
+                    <spirit:size>1</spirit:size>
+                    <spirit:access>read-write</spirit:access>
+                    <spirit:field>
+                        <spirit:name>Enable</spirit:name>
+                        <spirit:description>1 =&gt; true, 0 =&gt; false</spirit:description>
+                        <spirit:bitOffset>0</spirit:bitOffset>
+                        <spirit:bitWidth>1</spirit:bitWidth>
+                    </spirit:field>
+                </spirit:register>
+
+                <spirit:register>
+                    <spirit:name>Threshold</spirit:name>
+                    <spirit:description>Threshold for the TDC</spirit:description>
+                    <spirit:addressOffset>4</spirit:addressOffset>
+                    <spirit:size>32</spirit:size>
+                    <spirit:access>read-write</spirit:access>
+                    <spirit:field>
+                        <spirit:name>Value</spirit:name>
+                        <spirit:description>the value of the Threshold</spirit:description>
+                        <spirit:bitOffset>0</spirit:bitOffset>
+                        <spirit:bitWidth>32</spirit:bitWidth>
+                    </spirit:field>
+                </spirit:register>
+
+                <spirit:register>
+                    <spirit:name>SrcSelected</spirit:name>
+                    <spirit:description>Choose between the SiPM source and Test_Pulse</spirit:description>
+                    <spirit:addressOffset>5</spirit:addressOffset>
+                    <spirit:size>1</spirit:size>
+                    <spirit:access>read-write</spirit:access>
+                    <spirit:field>
+                        <spirit:name>Mode</spirit:name>
+                        <spirit:description>Mode : 0 =&gt; SiPM, 1 =&gt; Test_Pulse</spirit:description>
+                        <spirit:bitOffset>0</spirit:bitOffset>
+                        <spirit:bitWidth>1</spirit:bitWidth>
+                    </spirit:field>
+                </spirit:register>
+
+                <spirit:register>
+                    <spirit:name>FlagSyncError</spirit:name>
+                    <spirit:description>Flag error that represent a problem of sync with the other FPGA</spirit:description>
+                    <spirit:addressOffset>6</spirit:addressOffset>
+                    <spirit:size>1</spirit:size>
+                    <spirit:access>read-only</spirit:access>
+                    <spirit:field>
+                        <spirit:name>Value</spirit:name>
+                        <spirit:description>0 =&gt; No error, 1 =&gt; Error</spirit:description>
+                        <spirit:bitOffset>0</spirit:bitOffset>
+                        <spirit:bitWidth>1</spirit:bitWidth>
+                    </spirit:field>
+                </spirit:register>
+
+                <spirit:register>
+                    <spirit:name>DisableFlagSync</spirit:name>
+                    <spirit:description>Disable the flag Sync error, also generate a pulse...</spirit:description>
+                    <spirit:addressOffset>7</spirit:addressOffset>
+                    <spirit:size>1</spirit:size>
+                    <spirit:access>read-write</spirit:access>
+                    <spirit:field>
+                        <spirit:name>Mode</spirit:name>
+                        <spirit:description>0 =&gt; Nothing, 1 =&gt; Put FalgSyncError to 0 and send a pulse</spirit:description>
+                        <spirit:bitOffset>0</spirit:bitOffset>
+                        <spirit:bitWidth>1</spirit:bitWidth>
+                    </spirit:field>
+                </spirit:register>
+
+                <spirit:register>
+                    <spirit:name>ActiveChannels</spirit:name>
+                    <spirit:description>Active channels for the SIPM</spirit:description>
+                    <spirit:addressOffset>8</spirit:addressOffset>
+                    <spirit:size>17</spirit:size>
+                    <spirit:access>read-write</spirit:access>
+                    <spirit:reset>
+                        <spirit:value>65535</spirit:value>
+                    </spirit:reset>
+                    <spirit:field>
+                        <spirit:name>MasterSwitch</spirit:name>
+                        <spirit:description>Activate all channels</spirit:description>
+                        <spirit:bitOffset>0</spirit:bitOffset>
+                        <spirit:bitWidth>1</spirit:bitWidth>
+                    </spirit:field>
+                    <spirit:field>
+                        <spirit:name>ChannelEnable</spirit:name>
+                        <spirit:description>Channels goes from 0 to 15, Activate the channel with the values of bits</spirit:description>
+                        <spirit:bitOffset>0</spirit:bitOffset>
+                        <spirit:bitWidth>16</spirit:bitWidth>
+                    </spirit:field>
+                </spirit:register>
+
+                <spirit:register>
+                    <spirit:name>ProductKey</spirit:name>
+                    <spirit:description>Constant value to identify project</spirit:description>
+                    <spirit:addressOffset>9</spirit:addressOffset>
+                    <spirit:size>32</spirit:size>
+                    <spirit:access>read-write</spirit:access>
+                    <spirit:reset>
+                        <spirit:value>3135175374</spirit:value>
+                    </spirit:reset>
+                    <spirit:field>
+                        <spirit:name>Value</spirit:name>
+                        <spirit:description>Constant value</spirit:description>
+                        <spirit:bitOffset>0</spirit:bitOffset>
+                        <spirit:bitWidth>32</spirit:bitWidth>
+                    </spirit:field>
+                </spirit:register>
+            </spirit:addressBlock>
+        </spirit:memoryMap>
+    </spirit:memoryMaps>
+</spirit:component>
