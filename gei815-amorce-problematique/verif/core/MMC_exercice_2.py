@@ -85,7 +85,7 @@ class MMC_CRC8:
 
     def __init__(self, logicblock_instance: SimHandleBase):
         self.dut = logicblock_instance
-
+        # assert True == False
         self.input_mon = DataValidMonitor_Template(
             clk=self.dut.clk,
             valid=self.dut.reset,
@@ -119,7 +119,7 @@ class MMC_CRC8:
         self._checkercoro.kill()
         self._checkercoro = None
 
-    # Model expects list of ints as inputs, returns a list of ints
+    #  expects list of ints as inputs, returns a list of ints
     # modifiy as needed.
     def model(self, InputsA: List[int], InputsB: List[int]) -> List[int]:
         # equivalent model to HDL code
@@ -137,17 +137,17 @@ class MMC_CRC8:
             await cocotb.triggers.ClockCycles(self.dut.clk, 1000, rising=True)
 
             print("FRED ET JULIENNNNNNNNNNNNNN\n")
-
-            """
+            # assert False == True
             actual = await self.output_mon.values.get()
             expected_inputs = await self.input_mon.values.get()
-            expected = self.model(
-                InputsA=expected_inputs["SignalA"], InputsB=expected_inputs["SignalB"]
-            )
+            expected = self.model(InputsA=expected_inputs["SignalA"], InputsB=expected_inputs["SignalB"])
 
-            crc_valid = python.moulecrc(input) == model.moniteur_out.crc8 
+
             # compare expected with actual using assertions. Exact indexing must
             # be adapted to specific case and model return value
             assert actual["SignalC"] == expected[0]
             assert actual["SignalD"] == expected[1]
-            """
+            print("poil")
+            assert False == True
+            assert True
+

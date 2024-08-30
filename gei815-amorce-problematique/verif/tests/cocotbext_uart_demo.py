@@ -11,21 +11,20 @@ from MMC_exercice_2 import *
 @cocotb.test()
 async def cocotbext_uart_demo(dut):
     print("Uart instance demo")
-    await init(dut)
 
     # L2.E1 - Ajouter l'instanciation du MMC
     inst_MMC_CRC8 = MMC_CRC8(dut.inst_packet_merger.inst_crc_calc)
     inst_MMC_CRC8.start()
 
     # L1.E4 - Ajouter l'initialisation des pattes d'entrée et de l'horloge
-    # await votre_initialisation(dut) 
+    await init(dut)
 
     # Driver and Sink for the dut UART RX/TX channels
     uart_driver = UartSource(dut.in_sig, baud=1000000, bits=8)
     uart_sink   = UartSink(dut.out_sig, baud=1000000, bits=8)
 
     # L1.E4 - Start thread for the reply function for the expected UART response.
-    # Task_returnMessage = await cocotb.start(wait_reply(dut, uart_sink))
+    Task_returnMessage = await cocotb.start(wait_reply(dut, uart_sink))
 
     # Generate arbitrary value to send on the UART
     # SomeValue = cocotb.binary.BinaryValue(value=0xDEADBEEF, n_bits=32, bigEndian=True)
