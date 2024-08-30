@@ -94,7 +94,8 @@ class MMC_CRC8:
 
         self.output_mon = DataValidMonitor_Template(
             clk=self.dut.clk_i,
-            valid=self.dut.done,
+            valid=self.dut.o_done,
+            match=self.dut.o_match,
             datas=dict(SignalC=self.dut.o_SignalC, SignalD=self.dut.o_SignalD)
         )
 
