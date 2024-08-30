@@ -2,8 +2,9 @@ import cocotb
 from cocotb.clock import Clock
 from cocotb.triggers import Join
 from cocotbext.uart import UartSource, UartSink
-from utilsVerif import print_cocotb_BinaryValue
+from utilsVerif import *
 from cocotb.log import SimLog
+from MMC_exercice_2 import *
 
 
 # Decorator to tell cocotb this function is a coroutine
@@ -12,22 +13,22 @@ async def cocotbext_uart_demo(dut):
     print("Uart instance demo")
 
     # L2.E1 - Ajouter l'instanciation du MMC
-    # inst_MMC_CRC8 = MMC_CRC8(dut.CheminVersPacketMergerCRC8)
-    # inst_MMC_CRC8.start() # avec ou sans await?
+    inst_MMC_CRC8 = MMC_CRC8(dut.inst_packet_merger.inst_crc_calc)
+    inst_MMC_CRC8.start()
 
     # L1.E4 - Ajouter l'initialisation des pattes d'entrée et de l'horloge
-    # await votre_initialisation(dut) 
+    await init(dut)
 
     # Driver and Sink for the dut UART RX/TX channels
     uart_driver = UartSource(dut.in_sig, baud=1000000, bits=8)
     uart_sink   = UartSink(dut.out_sig, baud=1000000, bits=8)
 
     # L1.E4 - Start thread for the reply function for the expected UART response.
-    # Task_returnMessage = await cocotb.start(wait_reply(dut, uart_sink))
+    Task_returnMessage = await cocotb.start(wait_reply(dut, uart_sink))
 
     # Generate arbitrary value to send on the UART
-    SomeValue = cocotb.binary.BinaryValue(value=0x1023456789ABDCEF, n_bits=64, bigEndian=False)
-
+    # SomeValue = cocotb.binary.BinaryValue(value=0xDEADBEEF, n_bits=32, bigEndian=True)
+    SomeValue = build_command_message(0,0x9,0)
     # Print cocotb value demo function. Uncomment if desired.
     # print_cocotb_BinaryValue(SomeValue)
 
@@ -37,6 +38,22 @@ async def cocotbext_uart_demo(dut):
 
     # L1.E4 ait for response to complete or for timeout
     # await Task_returnMessage
+
+
+async def init(dut):
+    dut.reset.value = 1
+    dut.in_sig.value = 1
+    dut.resetCyclic.value = 1
+    dut.sipms.value = 3
+    # fetch value from a signal in the dut
+    fetch_value = dut.reset.value
+    # Confirm type of read signal. Expected: cocotb.binary.BinaryValue
+    print(type(fetch_value))
+    await cocotb.start(Clock(dut.clk, 10, units='ns').start())
+    # wait for 1000 clock periods
+    await cocotb.triggers.ClockCycles(dut.clk, 10, rising=True)
+    dut.reset.value = 0
+    await cocotb.triggers.ClockCycles(dut.clk, 1, rising=True)
 
 
 # L.E4 function to wait for response message
