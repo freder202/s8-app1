@@ -1,0 +1,472 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="Black">
+    <option name="sdkName" value="Python 3.9" />
+  </component>
+  <component name="ProjectRootManager" version="2" project-jdk-name="Python 3.9" project-jdk-type="Python SDK" />
+  <component name="SVCompilerDirectivesDefines">
+    <option name="define">
+      <map>
+        <entry key="ADDR_REG_LENGTH">
+          <value>
+            <Define>
+              <option name="definitions">
+                <list>
+                  <Body>
+                    <option name="offset" value="140" />
+                    <option name="replacementList" value="8" />
+                    <option name="source" value="MessageWrapper.sv" />
+                  </Body>
+                </list>
+              </option>
+            </Define>
+          </value>
+        </entry>
+        <entry key="BIT_DISABLE">
+          <value>
+            <Define>
+              <option name="definitions">
+                <list>
+                  <Body>
+                    <option name="offset" value="515" />
+                    <option name="replacementList" value="0" />
+                    <option name="source" value="tb_flowcontrol.sv" />
+                  </Body>
+                </list>
+              </option>
+              <option name="dependencies">
+                <set>
+                  <option value="basic.sv" />
+                </set>
+              </option>
+            </Define>
+          </value>
+        </entry>
+        <entry key="BIT_ENABLE">
+          <value>
+            <Define>
+              <option name="definitions">
+                <list>
+                  <Body>
+                    <option name="offset" value="493" />
+                    <option name="replacementList" value="1" />
+                    <option name="source" value="tb_flowcontrol.sv" />
+                  </Body>
+                </list>
+              </option>
+              <option name="dependencies">
+                <set>
+                  <option value="basic.sv" />
+                </set>
+              </option>
+            </Define>
+          </value>
+        </entry>
+        <entry key="COMMANDMAN_DEF">
+          <value>
+            <Define>
+              <option name="definitions">
+                <list>
+                  <Body>
+                    <option name="offset" value="214" />
+                    <option name="replacementList" value="1" />
+                    <option name="source" value="CommandManager.sv" />
+                  </Body>
+                </list>
+              </option>
+            </Define>
+          </value>
+        </entry>
+        <entry key="COMMAND_LENGTH">
+          <value>
+            <Define>
+              <option name="definitions">
+                <list>
+                  <Body>
+                    <option name="offset" value="32" />
+                    <option name="replacementList" value="5" />
+                    <option name="source" value="MessageWrapper.sv" />
+                  </Body>
+                </list>
+              </option>
+            </Define>
+          </value>
+        </entry>
+        <entry key="DATA_LENGTH">
+          <value>
+            <Define>
+              <option name="definitions">
+                <list>
+                  <Body>
+                    <option name="offset" value="8" />
+                    <option name="replacementList" value="32" />
+                    <option name="source" value="FIFOWrapper.sv" />
+                  </Body>
+                  <Body>
+                    <option name="offset" value="9" />
+                    <option name="replacementList" value="32" />
+                    <option name="source" value="MessageWrapper.sv" />
+                  </Body>
+                </list>
+              </option>
+            </Define>
+          </value>
+        </entry>
+        <entry key="DATA_TYPE_LENGTH">
+          <value>
+            <Define>
+              <option name="definitions">
+                <list>
+                  <Body>
+                    <option name="offset" value="57" />
+                    <option name="replacementList" value="5" />
+                    <option name="source" value="MessageWrapper.sv" />
+                  </Body>
+                </list>
+              </option>
+            </Define>
+          </value>
+        </entry>
+        <entry key="DUT">
+          <value>
+            <Define>
+              <option name="definitions">
+                <list>
+                  <Body>
+                    <option name="offset" value="275" />
+                    <option name="replacementList" value="tb_top.u_dut" />
+                    <option name="source" value="tb_flowcontrol.sv" />
+                  </Body>
+                </list>
+              </option>
+              <option name="dependencies">
+                <set>
+                  <option value="sanity.sv" />
+                  <option value="sanity_random.sv" />
+                </set>
+              </option>
+            </Define>
+          </value>
+        </entry>
+        <entry key="ERROR">
+          <value>
+            <Define>
+              <option name="definitions">
+                <list>
+                  <Body>
+                    <option name="offset" value="437" />
+                    <option name="replacementList" value="2" />
+                    <option name="source" value="tb_flowcontrol.sv" />
+                  </Body>
+                </list>
+              </option>
+            </Define>
+          </value>
+        </entry>
+        <entry key="FIFO_LENGTH">
+          <value>
+            <Define>
+              <option name="definitions">
+                <list>
+                  <Body>
+                    <option name="offset" value="31" />
+                    <option name="replacementList" value="68" />
+                    <option name="source" value="FIFOWrapper.sv" />
+                  </Body>
+                </list>
+              </option>
+            </Define>
+          </value>
+        </entry>
+        <entry key="GENERATOR_CHAN0">
+          <value>
+            <Define>
+              <option name="definitions">
+                <list>
+                  <Body>
+                    <option name="offset" value="312" />
+                    <option name="replacementList" value="tb_top.u_waveformgen0" />
+                    <option name="source" value="tb_flowcontrol.sv" />
+                  </Body>
+                </list>
+              </option>
+            </Define>
+          </value>
+        </entry>
+        <entry key="GENERATOR_CHAN1">
+          <value>
+            <Define>
+              <option name="definitions">
+                <list>
+                  <Body>
+                    <option name="offset" value="358" />
+                    <option name="replacementList" value="tb_top.u_waveformgen1" />
+                    <option name="source" value="tb_flowcontrol.sv" />
+                  </Body>
+                </list>
+              </option>
+            </Define>
+          </value>
+        </entry>
+        <entry key="NOTE">
+          <value>
+            <Define>
+              <option name="definitions">
+                <list>
+                  <Body>
+                    <option name="offset" value="475" />
+                    <option name="replacementList" value="0" />
+                    <option name="source" value="tb_flowcontrol.sv" />
+                  </Body>
+                </list>
+              </option>
+              <option name="dependencies">
+                <set>
+                  <option value="basic.sv" />
+                </set>
+              </option>
+            </Define>
+          </value>
+        </entry>
+        <entry key="PACKET_LENGTH">
+          <value>
+            <Define>
+              <option name="definitions">
+                <list>
+                  <Body>
+                    <option name="offset" value="84" />
+                    <option name="replacementList" value="48" />
+                    <option name="source" value="MessageWrapper.sv" />
+                  </Body>
+                </list>
+              </option>
+            </Define>
+          </value>
+        </entry>
+        <entry key="PACKET_NUMBER_LENGTH">
+          <value>
+            <Define>
+              <option name="definitions">
+                <list>
+                  <Body>
+                    <option name="offset" value="109" />
+                    <option name="replacementList" value="2" />
+                    <option name="source" value="MessageWrapper.sv" />
+                  </Body>
+                </list>
+              </option>
+            </Define>
+          </value>
+        </entry>
+        <entry key="TDCENABLE_DEF">
+          <value>
+            <Define>
+              <option name="definitions">
+                <list>
+                  <Body>
+                    <option name="offset" value="173" />
+                    <option name="replacementList" value="1" />
+                    <option name="source" value="TDC_enable.sv" />
+                  </Body>
+                </list>
+              </option>
+            </Define>
+          </value>
+        </entry>
+        <entry key="TDC_DEF">
+          <value>
+            <Define>
+              <option name="definitions">
+                <list>
+                  <Body>
+                    <option name="offset" value="129" />
+                    <option name="replacementList" value="1" />
+                    <option name="source" value="TDC.sv" />
+                  </Body>
+                </list>
+              </option>
+            </Define>
+          </value>
+        </entry>
+        <entry key="UARTRX_DEF">
+          <value>
+            <Define>
+              <option name="definitions">
+                <list>
+                  <Body>
+                    <option name="offset" value="177" />
+                    <option name="replacementList" value="1" />
+                    <option name="source" value="UartRx.sv" />
+                  </Body>
+                </list>
+              </option>
+            </Define>
+          </value>
+        </entry>
+        <entry key="UARTTX_DEF">
+          <value>
+            <Define>
+              <option name="definitions">
+                <list>
+                  <Body>
+                    <option name="offset" value="228" />
+                    <option name="replacementList" value="1" />
+                    <option name="source" value="UartTx.sv" />
+                  </Body>
+                </list>
+              </option>
+            </Define>
+          </value>
+        </entry>
+        <entry key="UART_CLOCK">
+          <value>
+            <Define>
+              <option name="definitions">
+                <list>
+                  <Body>
+                    <option name="offset" value="404" />
+                    <option name="replacementList" value="tb_top.clk" />
+                    <option name="source" value="tb_flowcontrol.sv" />
+                  </Body>
+                </list>
+              </option>
+            </Define>
+          </value>
+        </entry>
+        <entry key="WARNING">
+          <value>
+            <Define>
+              <option name="definitions">
+                <list>
+                  <Body>
+                    <option name="offset" value="455" />
+                    <option name="replacementList" value="1" />
+                    <option name="source" value="tb_flowcontrol.sv" />
+                  </Body>
+                </list>
+              </option>
+              <option name="dependencies">
+                <set>
+                  <option value="sanity_random.sv" />
+                </set>
+              </option>
+            </Define>
+          </value>
+        </entry>
+        <entry key="cnt">
+          <value>
+            <Define>
+              <option name="definitions">
+                <list>
+                  <Body>
+                    <option name="offset" value="80" />
+                    <option name="replacementList" value="test_fifo.fi1.cnt" />
+                    <option name="source" value="fifo_property.sv" />
+                  </Body>
+                </list>
+              </option>
+            </Define>
+          </value>
+        </entry>
+        <entry key="rd_ptr">
+          <value>
+            <Define>
+              <option name="definitions">
+                <list>
+                  <Body>
+                    <option name="offset" value="8" />
+                    <option name="replacementList" value="test_fifo.fi1.rd_ptr" />
+                    <option name="source" value="fifo_property.sv" />
+                  </Body>
+                </list>
+              </option>
+            </Define>
+          </value>
+        </entry>
+        <entry key="registers_addr_width">
+          <value>
+            <Define>
+              <option name="definitions">
+                <list>
+                  <Body>
+                    <option name="offset" value="55" />
+                    <option name="replacementList" value="4" />
+                    <option name="source" value="Registers.sv" />
+                  </Body>
+                  <Body>
+                    <option name="offset" value="9" />
+                    <option name="replacementList" value="4" />
+                    <option name="source" value="registers_sv_pkg.svh" />
+                  </Body>
+                </list>
+              </option>
+            </Define>
+          </value>
+        </entry>
+        <entry key="registers_data_width">
+          <value>
+            <Define>
+              <option name="definitions">
+                <list>
+                  <Body>
+                    <option name="offset" value="86" />
+                    <option name="replacementList" value="32" />
+                    <option name="source" value="Registers.sv" />
+                  </Body>
+                  <Body>
+                    <option name="offset" value="40" />
+                    <option name="replacementList" value="32" />
+                    <option name="source" value="registers_sv_pkg.svh" />
+                  </Body>
+                </list>
+              </option>
+            </Define>
+          </value>
+        </entry>
+        <entry key="uart_params_h">
+          <value>
+            <Define>
+              <option name="definitions">
+                <list>
+                  <Body>
+                    <option name="offset" value="30" />
+                    <option name="source" value="UartParam.svh" />
+                  </Body>
+                </list>
+              </option>
+            </Define>
+          </value>
+        </entry>
+        <entry key="usart_params_h">
+          <value>
+            <Define>
+              <option name="definitions">
+                <list>
+                  <Body>
+                    <option name="offset" value="31" />
+                    <option name="source" value="UsartParam.svh" />
+                  </Body>
+                </list>
+              </option>
+            </Define>
+          </value>
+        </entry>
+        <entry key="wr_ptr">
+          <value>
+            <Define>
+              <option name="definitions">
+                <list>
+                  <Body>
+                    <option name="offset" value="44" />
+                    <option name="replacementList" value="test_fifo.fi1.wr_ptr" />
+                    <option name="source" value="fifo_property.sv" />
+                  </Body>
+                </list>
+              </option>
+            </Define>
+          </value>
+        </entry>
+      </map>
+    </option>
+  </component>
+</project>
