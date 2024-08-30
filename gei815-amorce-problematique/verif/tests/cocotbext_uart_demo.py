@@ -14,8 +14,8 @@ async def cocotbext_uart_demo(dut):
     await init(dut)
 
     # L2.E1 - Ajouter l'instanciation du MMC
-    inst_MMC_CRC8 = MMC_CRC8(dut.CheminVersPacketMergerCRC8)
-    await inst_MMC_CRC8.start()
+    inst_MMC_CRC8 = MMC_CRC8(dut.inst_packet_merger.inst_crc_calc)
+    inst_MMC_CRC8.start()
 
     # L1.E4 - Ajouter l'initialisation des pattes d'entrée et de l'horloge
     # await votre_initialisation(dut) 

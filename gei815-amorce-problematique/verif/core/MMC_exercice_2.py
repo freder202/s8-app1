@@ -87,16 +87,15 @@ class MMC_CRC8:
         self.dut = logicblock_instance
 
         self.input_mon = DataValidMonitor_Template(
-            clk=self.dut.clk_i,
-            valid=self.dut.valid,
-            datas=dict(SignalA=self.dut.i_SignalA, SignalB=self.dut.i_SignalB),
+            clk=self.dut.clk,
+            valid=self.dut.reset,
+            datas=dict(SignalA=self.dut.i_data,SignalB=self.dut.i_valid,SignalC=self.dut.i_last),
         )
 
         self.output_mon = DataValidMonitor_Template(
-            clk=self.dut.clk_i,
-            valid=self.dut.o_done,
-            match=self.dut.o_match,
-            datas=dict(SignalC=self.dut.o_SignalC, SignalD=self.dut.o_SignalD)
+           clk=self.dut.clk,
+           valid=self.dut.o_done,
+           datas=dict(SignalC=self.dut.o_match, SignalD=self.dut.o_done)
         )
 
         self._checkercoro = None
@@ -109,7 +108,7 @@ class MMC_CRC8:
             raise RuntimeError("Monitor already started")
         self.input_mon.start()
         self.output_mon.start()
-        self._checkercoro = cocotb.start_soon(self._check())
+        self._checkercoro = cocotb.start_soon(self._checker())
 
     def stop(self) -> None:
         """Stops everything"""
@@ -136,6 +135,9 @@ class MMC_CRC8:
         while True:
             # dummy await, allows to run without checker implementation and verify monitors
             await cocotb.triggers.ClockCycles(self.dut.clk, 1000, rising=True)
+
+            print("FRED ET JULIENNNNNNNNNNNNNN\n")
+
             """
             actual = await self.output_mon.values.get()
             expected_inputs = await self.input_mon.values.get()
@@ -143,6 +145,7 @@ class MMC_CRC8:
                 InputsA=expected_inputs["SignalA"], InputsB=expected_inputs["SignalB"]
             )
 
+            crc_valid = python.moulecrc(input) == model.moniteur_out.crc8 
             # compare expected with actual using assertions. Exact indexing must
             # be adapted to specific case and model return value
             assert actual["SignalC"] == expected[0]
