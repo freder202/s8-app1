@@ -3,6 +3,8 @@ cocotb-env/
 
 simdir/
 
+!simdir/donotdelete
+
 .idea/
 
 **/__pycache__/
