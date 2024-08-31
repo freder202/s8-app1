@@ -27,5 +27,5 @@ async def do_wait_only(dut):
     await cocotb.start(Clock(dut.clk, 10, units='ns').start())
 
     # wait for 1000 clock periods triggers every rising edge
-    await cocotb.triggers.ClockCycles(dut.clk, 1000, rising=True)
+    await cocotb.triggers.ClockCycles(dut.clk, 10, rising=True)
 
