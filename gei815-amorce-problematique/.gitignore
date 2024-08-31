@@ -1,7 +1,7 @@
 
 cocotb-env/
 
-simdir/
+simdir/*
 
 !simdir/donotdelete
 
