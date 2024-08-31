@@ -73,8 +73,9 @@ async def lab1E3(dut):
     await uart_driver.wait()
 
     #Send CRC
-    crc8 = uv.get_expected_crc(reg9)
-    await uart_driver.write(crc8.buff)
+    crc8 = uv.get_expected_crc(reg9.buff)
+    crc8bin = cocotb.binary.BinaryValue(value=crc8, n_bits=8, bigEndian=False)
+    await uart_driver.write(crc8bin.buff)
     await uart_driver.wait()
 
     # L1.E4 ait for response to complete or for timeout
