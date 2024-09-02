@@ -52,7 +52,7 @@ async def lab1E4(dut):
     print(packetSplitter)
     print(hex(int(packetSplitter)))
 
-    if (hex(int(packetSplitter)) != hex(0x800badeface)) :
+    if (hex(int(packetSpliter)) != hex(0x800badeface)) :
         raise RuntimeError("Not = 0x800badeface")
 
 
