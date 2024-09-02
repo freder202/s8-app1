@@ -25,13 +25,16 @@ class DataValidMonitor_Template:
     """
 
     def __init__(
-        self, clk: SimHandleBase, valid: SimHandleBase, datas: Dict[str, SimHandleBase]
+        self, clk: SimHandleBase, valid: SimHandleBase,
+        datas: Dict[str, SimHandleBase], Name:str = "Stock Name"
     ):
         self.values = Queue[Dict[str, int]]()
         self._clk = clk
         self._datas = datas
         self._valid = valid
         self._coro = None # is monitor running? False if "None"
+
+        self.Name = Name
 
         self.log = SimLog("cocotb.Monitor.%s" % (type(self).__qualname__))
 
@@ -68,7 +71,7 @@ class DataValidMonitor_Template:
         Return value is what is stored in queue. Meant to be overriden by the user.
         """
         # possible messages to test monitor
-        self.log.info("[DtValMonTemp] use this to print some information at info level")
+        self.log.info(f"[{self.Name}] Data sampled!")
         #self.log.info({name: handle.value for name, handle in self._datas.items()})
 
 
@@ -105,13 +108,15 @@ class MMC_CRC8:
             # Having "1" on valid pin tells the monitor to records
             # what's on datas variable through _sample()
             valid=self.dut.i_valid,
-            datas=dict(SigInA=self.dut.i_data, SigInB=self.dut.i_last)
+            datas=dict(SigInA=self.dut.i_data, SigInB=self.dut.i_last),
+            Name="InputMonitor"
         )
 
         self.output_mon = DataValidMonitor_Template(
             clk=self.dut.clk,
             valid=self.dut.o_done,
-            datas=dict(SigOutA=self.dut.o_match, SigOutB=self.dut.o_done)
+            datas=dict(SigOutA=self.dut.o_match, SigOutB=self.dut.o_done),
+            Name="OutputMonitor"
         )
 
         self._checkercoro = None
@@ -162,9 +167,11 @@ class MMC_CRC8:
     """
     async def _checker(self) -> None:
         print("[MMC_CRC8 CLASS] Checker have been triggered!")
+
+
         while True:
             # dummy await, allows to run without checker implementation and verify monitors
-            await cocotb.triggers.ClockCycles(self.dut.clk, 1000, rising=True)
+            # await cocotb.triggers.ClockCycles(self.dut.clk, 1000, rising=True)
             """
             actual = await self.output_mon.values.get()
             expected_inputs = await self.input_mon.values.get()
@@ -177,3 +184,8 @@ class MMC_CRC8:
             assert actual["SignalC"] == expected[0]
             assert actual["SignalD"] == expected[1]
             """
+
+            inMonValue = await self.input_mon.values.get()
+            print(type(inMonValue["SigInA"]))
+
+            # assert False running this might cause error
