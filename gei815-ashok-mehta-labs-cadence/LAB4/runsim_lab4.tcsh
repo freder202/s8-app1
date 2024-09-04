@@ -35,8 +35,8 @@ set assertionfiles="counter_property.sv"
 
 
 # insert errors or not for lab 4. Leave only 1 line uncommented
-set MainOptions="-define nobugs"
-#set MainOptions="-define check1"
+# set MainOptions="-define nobugs"
+set MainOptions="-define check1"
 #set MainOptions="-define check2"
 #set MainOptions="-define check3"
 ########################################################################

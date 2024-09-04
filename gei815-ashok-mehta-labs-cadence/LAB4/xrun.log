@@ -1,0 +1,135 @@
+xrun(64): 23.09-s006: (c) Copyright 1995-2024 Cadence Design Systems, Inc.
+TOOL:	xrun(64)	23.09-s006: Started on Sep 04, 2024 at 14:48:18 EDT
+xrun
+	-define check1
+	-rnm_package
+	-nowarn COVFHT
+	-nowarn COVCGN
+	-nowarn COVUTA
+	-nowarn ICFCLD
+	-nowarn WSEM2009
+	-input /home/bilf0901/Bureau/s8-app1/gei815-ashok-mehta-labs-cadence/verif/scripts/misc_commands.tcl
+	-gui
+	-input /home/bilf0901/Bureau/s8-app1/gei815-ashok-mehta-labs-cadence/verif/scripts/waves.tcl
+	-ACCESS +rwc
+	-seed random
+	-sv
+	counter.v
+	test_counter.sv
+	counter_property.sv
+file: counter.v
+	module worklib.counter:v
+		errors: 0, warnings: 0
+file: counter_property.sv
+	module worklib.counter_property:sv
+		errors: 0, warnings: 0
+		Caching library 'worklib' ....... Done
+	Elaborating the design hierarchy:
+	Top level design units:
+		test_counter
+		Caching library 'worklib' ....... Done
+	Building instance overlay tables: .................... Done
+	Generating native compiled code:
+		worklib.counter_property:sv <0x34830745>
+			streams:   4, words:  3108
+		worklib.counter:v <0x5a740d9f>
+			streams:   3, words:  1234
+	Building instance specific data structures.
+	Loading native compiled code:     .................... Done
+	Design hierarchy summary:
+		              Instances  Unique
+		Modules:              3       3
+		Registers:           18      18
+		Scalar wires:         5       -
+		Vectored wires:       3       -
+		Named events:         1       1
+		Always blocks:        8       8
+		Initial blocks:       3       3
+		Pseudo assignments:   7       -
+		Assertions:           1       1
+		Process Clocks:       2       2
+	Writing initial simulation snapshot: worklib.test_counter:sv
+xmsim: *W,NOMTDGUI: Multi-Threaded Dumping is disabled for interactive debug mode.
+SVSEED set randomly from command line: 1597363949
+
+-------------------------------------
+Relinquished control to SimVision...
+xcelium> 
+xcelium> source /mnt/opt/cmc/tools/cadence/XCELIUMMAIN23.09.006_lnx86/tools/xcelium/files/xmsimrc
+xcelium> ########################################################################
+xcelium> ## Author  :    Marc-Andre Tetrault
+xcelium> ## Project :    Verification Primer
+xcelium> ##
+xcelium> ## Universite de Sherbrooke
+xcelium> ########################################################################
+xcelium> #
+xcelium> # Purpose   :   Misc Commands sent to simulator
+xcelium> ########################################################################
+xcelium> 
+xcelium> 
+xcelium> # get the seed. Reference: "SystemVerilog Reference" from Cadence Help tool (cdnshelp)
+xcelium> set RetrievedSeed [set svseed]
+1597363949
+xcelium> puts "The SystemVerilog seed is $RetrievedSeed"
+The SystemVerilog seed is 1597363949
+xcelium> 
+xcelium> # set severity_pack_assert_off {warning}
+xcelium> # set pack_assert_off {  numeric_std }
+xcelium> 
+xcelium> set assert_stop_level never
+never
+xcelium> ########################################################################
+xcelium> ## Author  :    Marc-Andre Tetrault
+xcelium> ## Project :    Verification Primer
+xcelium> ##
+xcelium> ## Universite de Sherbrooke
+xcelium> ########################################################################
+xcelium> 
+xcelium> # save all waveforms by default. Consult the Simvision user guide
+xcelium> # for details on the commands and how to change recording rules
+xcelium> # if disk space is an issue.
+xcelium> 
+xcelium> database -open waves -into waves.shm -default
+Created default SHM database waves
+xcelium> 
+xcelium> probe -create $::env(LAB_TEST_DUT_NAME) -all -depth all -database waves
+Created probe 1
+xcelium> run
+         5  rst_=1 clk=1 count_enb=0 ld_cnt_=1 updn_cnt=1 DIN=x DOUT=x
+        15  rst_=0 clk=1 count_enb=0 ld_cnt_=1 updn_cnt=1 DIN=x DOUT=x
+        25  rst_=0 clk=1 count_enb=0 ld_cnt_=1 updn_cnt=1 DIN=x DOUT=x
+        35  rst_=1 clk=1 count_enb=0 ld_cnt_=1 updn_cnt=1 DIN=x DOUT=x
+        45  rst_=1 clk=1 count_enb=0 ld_cnt_=0 updn_cnt=1 DIN=0 DOUT=x
+        55  rst_=1 clk=1 count_enb=0 ld_cnt_=0 updn_cnt=1 DIN=0 DOUT=0
+        65  rst_=1 clk=1 count_enb=0 ld_cnt_=0 updn_cnt=1 DIN=100 DOUT=0
+        75  rst_=1 clk=1 count_enb=1 ld_cnt_=1 updn_cnt=1 DIN=100 DOUT=100
+        85  rst_=1 clk=1 count_enb=1 ld_cnt_=1 updn_cnt=1 DIN=100 DOUT=101
+        95  rst_=1 clk=1 count_enb=1 ld_cnt_=1 updn_cnt=1 DIN=100 DOUT=102
+       105  rst_=1 clk=1 count_enb=1 ld_cnt_=1 updn_cnt=1 DIN=100 DOUT=103
+       115  rst_=1 clk=1 count_enb=1 ld_cnt_=1 updn_cnt=1 DIN=100 DOUT=104
+       125  rst_=1 clk=1 count_enb=1 ld_cnt_=1 updn_cnt=1 DIN=100 DOUT=105
+       135  rst_=1 clk=1 count_enb=1 ld_cnt_=1 updn_cnt=1 DIN=100 DOUT=106
+       145  rst_=1 clk=1 count_enb=1 ld_cnt_=1 updn_cnt=1 DIN=100 DOUT=107
+       155  rst_=1 clk=1 count_enb=1 ld_cnt_=1 updn_cnt=1 DIN=100 DOUT=108
+       165  rst_=1 clk=1 count_enb=1 ld_cnt_=1 updn_cnt=1 DIN=100 DOUT=109
+       175  rst_=1 clk=1 count_enb=0 ld_cnt_=1 updn_cnt=1 DIN=100 DOUT=110
+       185  rst_=1 clk=1 count_enb=0 ld_cnt_=1 updn_cnt=1 DIN=100 DOUT=110
+       195  rst_=1 clk=1 count_enb=0 ld_cnt_=0 updn_cnt=1 DIN=100 DOUT=110
+       205  rst_=1 clk=1 count_enb=1 ld_cnt_=1 updn_cnt=0 DIN=100 DOUT=100
+       215  rst_=1 clk=1 count_enb=1 ld_cnt_=1 updn_cnt=0 DIN=100 DOUT=99
+       225  rst_=1 clk=1 count_enb=1 ld_cnt_=1 updn_cnt=0 DIN=100 DOUT=98
+       235  rst_=1 clk=1 count_enb=1 ld_cnt_=1 updn_cnt=0 DIN=100 DOUT=97
+       245  rst_=1 clk=1 count_enb=1 ld_cnt_=1 updn_cnt=0 DIN=100 DOUT=96
+       255  rst_=1 clk=1 count_enb=1 ld_cnt_=1 updn_cnt=0 DIN=100 DOUT=95
+       265  rst_=1 clk=1 count_enb=1 ld_cnt_=1 updn_cnt=0 DIN=100 DOUT=94
+       275  rst_=1 clk=1 count_enb=1 ld_cnt_=1 updn_cnt=0 DIN=100 DOUT=93
+       285  rst_=1 clk=1 count_enb=1 ld_cnt_=1 updn_cnt=0 DIN=100 DOUT=92
+       295  rst_=1 clk=1 count_enb=1 ld_cnt_=1 updn_cnt=0 DIN=100 DOUT=91
+       305  rst_=1 clk=1 count_enb=0 ld_cnt_=1 updn_cnt=0 DIN=100 DOUT=90
+       315  rst_=1 clk=1 count_enb=0 ld_cnt_=1 updn_cnt=0 DIN=100 DOUT=90
+       325  rst_=1 clk=1 count_enb=0 ld_cnt_=1 updn_cnt=0 DIN=100 DOUT=90
+Memory Usage - Current physical: 91.6M, Current virtual: 387.5M
+CPU Usage - 0.3s system + 0.2s user = 0.5s total (0.9% cpu)
+Simulation complete via $finish(2) at time 325 NS + 0
+./test_counter.sv:29   @(posedge clk); $finish(2);
+xcelium> 

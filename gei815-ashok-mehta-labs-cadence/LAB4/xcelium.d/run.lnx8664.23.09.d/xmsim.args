@@ -1,0 +1,40 @@
+//
+// File created by:  xrun
+// Do not modify this file
+//
+-NOWARN
+COVFHT
+-NOWARN
+COVCGN
+-NOWARN
+COVUTA
+-NOWARN
+ICFCLD
+-NOWARN
+WSEM2009
+-INPUT
+/home/bilf0901/Bureau/s8-app1/gei815-ashok-mehta-labs-cadence/verif/scripts/misc_commands.tcl
+-gui
+-INPUT
+/home/bilf0901/Bureau/s8-app1/gei815-ashok-mehta-labs-cadence/verif/scripts/waves.tcl
+-MESSAGES
+-svseed
+random
+-sndynseed
+random
++EMGRLOG
+xrun.log
+-XLSTIME
+1725475698
+-XLKEEP
+-XLMODE
+./xcelium.d/run.lnx8664.23.09.d
+-RUNMODE
+-CDSLIB
+./xcelium.d/run.lnx8664.23.09.d/cds.lib
+-HDLVAR
+./xcelium.d/run.lnx8664.23.09.d/hdl.var
+-XLNAME
+xrun
+-XLVERSION
+"TOOL:	xrun(64)	23.09-s006"
