@@ -21,24 +21,22 @@ set randomseed=yes	# change to yes for automatic seed randomization
 # LAB1 settings
 ########################################################################
 # set defaults for string variables
-setenv LAB_TEST_DUT_NAME test_counter
-set test="test_counter"
+setenv LAB_TEST_DUT_NAME "test_overlap_nonoverlap"
+set test="test_overlap_nonoverlap"
 set test_dir="tests"
 set assertionfiles=""
-set dut="upc"
+set dut="test_overlap_nonoverlap"
 
-# Set default manifest files   
-set DesignFiles="-sv counter.v "
+# Set default manifest files
+set DesignFiles=""
 set Models=""
-set TestbenchFiles="test_counter.sv"
-set assertionfiles="counter_property.sv"
+set TestbenchFiles="test_overlap_nonoverlap.sv"
+set assertionfiles=""
 
 
-# insert errors or not for lab 4. Leave only 1 line uncommented
-set MainOptions="-define nobugs"
-#set MainOptions="-define check1"
-#set MainOptions="-define check2"
-#set MainOptions="-define check3"
+# options for lab 2
+#set MainOptions="-define overlap"
+set MainOptions="-define nonoverlap"
 ########################################################################
 
 

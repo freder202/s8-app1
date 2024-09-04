@@ -21,22 +21,23 @@ set randomseed=yes	# change to yes for automatic seed randomization
 # LAB1 settings
 ########################################################################
 # set defaults for string variables
-setenv LAB_TEST_DUT_NAME "test_overlap_nonoverlap"
-set test="test_overlap_nonoverlap"
+setenv LAB_TEST_DUT_NAME test_dut
+set test="dut1"
 set test_dir="tests"
 set assertionfiles=""
-set dut="test_overlap_nonoverlap"
+set dut="dut"
 
 # Set default manifest files
-set DesignFiles=""
+set DesignFiles="-sv dut.v "
 set Models=""
-set TestbenchFiles="test_overlap_nonoverlap.sv"
-set assertionfiles=""
+set TestbenchFiles="test_dut.sv"
+set assertionfiles="dut_property.sv"
 
 
-# options for lab 2
-set MainOptions="-define overlap"
-#set MainOptions="-define nonoverlap"
+# implication options for lab 1
+#set MainOptions="-define no_implication"
+#set MainOptions="-define implication"
+set MainOptions="-define implication_novac"
 ########################################################################
 
 
@@ -190,7 +191,7 @@ else if ($randomseed == "no") then
 endif
 
 # Build and call irun command
-irun $MainOptions \
+xrun $MainOptions \
      $Models \
      $DesignFiles \
      $TestbenchFiles \

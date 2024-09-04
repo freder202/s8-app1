@@ -21,24 +21,23 @@ set randomseed=yes	# change to yes for automatic seed randomization
 # LAB1 settings
 ########################################################################
 # set defaults for string variables
-setenv LAB_TEST_DUT_NAME test_counter
-set test="test_counter"
+setenv LAB_TEST_DUT_NAME test_dut
+set test="dut1"
 set test_dir="tests"
 set assertionfiles=""
-set dut="upc"
+set dut="dut"
 
-# Set default manifest files   
-set DesignFiles="-sv counter.v "
+# Set default manifest files
+set DesignFiles="-sv dut.v "
 set Models=""
-set TestbenchFiles="test_counter.sv"
-set assertionfiles="counter_property.sv"
+set TestbenchFiles="test_dut.sv"
+set assertionfiles="dut_property.sv"
 
 
-# insert errors or not for lab 4. Leave only 1 line uncommented
-set MainOptions="-define nobugs"
-#set MainOptions="-define check1"
-#set MainOptions="-define check2"
-#set MainOptions="-define check3"
+# implication options for lab 1
+#set MainOptions="-define no_implication"
+set MainOptions="-define implication"
+#set MainOptions="-define implication_novac"
 ########################################################################
 
 

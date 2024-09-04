@@ -35,9 +35,9 @@ set assertionfiles="dut_property.sv"
 
 
 # implication options for lab 1
-#set MainOptions="-define no_implication"
+set MainOptions="-define no_implication"
 #set MainOptions="-define implication"
-set MainOptions="-define implication_novac"
+#set MainOptions="-define implication_novac"
 ########################################################################
 
 
@@ -191,7 +191,7 @@ else if ($randomseed == "no") then
 endif
 
 # Build and call irun command
-irun $MainOptions \
+xrun $MainOptions \
      $Models \
      $DesignFiles \
      $TestbenchFiles \

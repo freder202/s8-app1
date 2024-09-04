@@ -15,3 +15,5 @@ puts "The SystemVerilog seed is $RetrievedSeed"
 
 # set severity_pack_assert_off {warning}
 # set pack_assert_off {  numeric_std }
+
+# set assert_stop_level never
