@@ -7,24 +7,24 @@ module Registers#(
 		parameter		   width       = `registers_data_width,
 	    parameter		   addressWidth = `registers_addr_width
 	    )(
-	      input logic [addressWidth-1:0] 	address,
-	      input logic 		   			 	writeEnable,
-	      input logic [width-1:0] 	   		writeData,
-	      input logic 		   				readEnable,
+	      input logic 		   				reset,
 	      input logic 		   				clk,
-	      input logic 		   				rstn,
+	      input logic 		   				readEnable,
+	      input logic 		   			 	writeEnable,
+	      input logic [addressWidth-1:0] 	address,
+	      input logic [width-1:0] 	   		writeData,
 		  input logic 			            writeAdmin,
-		  output logic [width-1:0] 	   		readData,
 		  output logic  					writeAck,
+		  output logic [width-1:0] 	   		readData,
 		  output logic						syncClearStrobe, // Strobe to clear the flag error
 		  output logic						update_enable_channel // Strobe update channel
 	      );				
 
    registers_struct_type registers;
    
-	always_ff @ (posedge clk or negedge rstn) 
+	always_ff @ (posedge clk or posedge reset)
 		begin
-			if(rstn==0) begin
+			if(reset==1) begin
 				registers <= reset_registers(registers);
 				readData <= 0;
 				writeAck <= 0;

@@ -72,11 +72,9 @@ module UsartManager
             STATE_SEND : begin
                 tx_data_r = _manager.tx_data;
                 tx_valid_r = 1;
-                data_sent_r = 0;
                 // Wait for transmission to start
                 if (!_tx_writer.ready) begin
                     //tx_valid_r = 0;
-                    data_sent_r = 1;
                     state = STATE_END; 
                 end
             end
@@ -95,7 +93,7 @@ module UsartManager
                 // Wait for tx to be ready before changing state (or we could read while tx not ready)
                 if(_tx_writer.ready) begin
                     // Notify command manager that data_was sent
-                    data_sent_r = 0;
+                    data_sent_r = 1;
                     state = STATE_WAIT;
                 end
             end

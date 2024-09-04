@@ -42,13 +42,18 @@ module TDC_dumb
     TDC_CHANNEL channelNumber = CHAN_0
     )
     (// Ports declaration
-        TDCInterface.internal bus,
-        input                 clk,
-        input                 reset,
-        input                 trigger,
-        input                 enable_channel,
-        output                busy
+        input   logic              reset,
+        input   logic              clk,
+        input   logic              i_trigger,
+        input   logic              i_enable_channel,
+        input   logic              i_clear,
+        output  logic              o_busy,
+        output  logic              o_hasEvent,
+        output  logic [3:0]        o_chanID,
+        output  logic [31:0]       o_timestamp,
+        output  logic [31:0]       o_pulseWidth
     );
+
 
     // local variable
     CRandomResolveTimes ResolveTimes;
@@ -58,9 +63,11 @@ module TDC_dumb
     reg deadtime_done ;
     reg saturate_time, r_saturate_time;
     reg r_busy;
+    reg r_hasEvent, r_hasEventForBusyClear;
+    reg [31:0]    r_timestamp, r_pulseWidth;
     reg [31:0]    RisingTime, FallingTime;
     reg [31:0]    RisingResolveTime, FallingResolveTime;
-    assign bus.chan = channelNumber;
+    assign o_chanID = channelNumber;
 
     initial begin
         if(ResolveTimes == null)
@@ -73,10 +80,10 @@ module TDC_dumb
 	end
 
 
-    always @(posedge trigger) begin
+    always @(posedge i_trigger) begin
 
 	    $display("Rising edge in channel %d.", channelNumber);
-        if(!bus.hasEvent && !busy && enable_channel) begin
+        if(!r_hasEvent && !r_busy && i_enable_channel) begin
             RisingTime <= 32'($stime/40);
 
             if(ResolveTimes.randomize() != 1) begin
@@ -88,8 +95,8 @@ module TDC_dumb
     end
 
     // save rising edge timing
-    always @(negedge trigger && enable_channel) begin
-        if(!bus.hasEvent && busy) begin
+    always @(negedge i_trigger && i_enable_channel) begin
+        if(!r_hasEvent && r_busy) begin
             FallingTime <= 32'($stime/40);
         end
     end
@@ -97,12 +104,12 @@ module TDC_dumb
 
     // save falling edge timing
     always_ff @(posedge clk) begin
-        find_falling_edge <= trigger;
-        if (bus.clear || !enable_channel) begin
+        find_falling_edge <= i_trigger;
+        if (i_clear || !i_enable_channel) begin
             got_falling_edge <= 0;
         end
-        else if (busy) begin
-            if(!trigger & find_falling_edge & !saturate_time) begin
+        else if (r_busy) begin
+            if(!i_trigger & find_falling_edge & !saturate_time) begin
                 got_falling_edge <= 1;
             end
         end
@@ -112,7 +119,7 @@ module TDC_dumb
     // wait until resolve time for both to complete
     always_ff @(posedge clk) begin
         r_saturate_time <= saturate_time;
-        if (bus.clear || !enable_channel) begin
+        if (i_clear || !i_enable_channel) begin
             set_output_values <= 0;
         end
         else if (got_falling_edge & !saturate_time) begin
@@ -130,28 +137,39 @@ module TDC_dumb
     // set values to output and signal existing new data.
     always_ff @(posedge clk) begin
         r_set_output_values <= set_output_values;
-        if (bus.clear || !enable_channel) begin
-            bus.hasEvent <= 0;
+        if (i_clear || !i_enable_channel) begin
+            r_hasEvent <= 0;
         end
         else if (!r_set_output_values & set_output_values) begin
-            bus.hasEvent <= 1;
-            bus.timestamp <= RisingTime;
+            r_hasEvent <= 1;
+            r_timestamp <= RisingTime;
             if(!saturate_time) begin
-                bus.timeOverThreshold <= FallingTime - RisingTime;
+                r_pulseWidth <= FallingTime - RisingTime;
             end
             else begin
-                bus.timeOverThreshold <= 5_000_000 / 40;
+                r_pulseWidth <= 5_000_000 / 40;
             end
+        end
+    end
+    always_ff @(posedge clk) begin
+        if (reset) begin
+            r_hasEventForBusyClear <= 0;
+        end
+        else if (r_hasEvent) begin
+            r_hasEventForBusyClear <= 1;
+        end
+        else if (!r_busy) begin
+            r_hasEventForBusyClear <= 0;
         end
     end
 
 
     // wait for deadtime to complete
     always_ff @(posedge clk) begin
-        if (!r_busy || reset || !enable_channel) begin
+        if (!r_busy || reset || !i_enable_channel) begin
             deadtime_done <= 0;
         end
-        else if (r_busy) begin
+        else if (r_hasEventForBusyClear) begin
             if(saturate_time && (((RisingTime*40 + ResolveTimes.RisingResolveTime + 200000) < (32'($stime))))) begin
                 deadtime_done <= 1;
             end
@@ -164,25 +182,28 @@ module TDC_dumb
     end
 
 
-    // busy goes 0 on clear, goes up on rising edge of trigger,
+    // r_busy goes 0 on clear, goes up on rising edge of trigger,
     always_ff @(posedge clk) begin
-        if (deadtime_done || reset || !enable_channel) begin
+        if ((deadtime_done && !find_falling_edge) || reset || !i_enable_channel) begin
             r_busy <= 0;
         end
-        else if (!find_falling_edge & trigger) begin
+        else if (!find_falling_edge & i_trigger) begin
             r_busy <= 1;
         end
     end
 
-    assign busy = r_busy;
+    assign o_busy = r_busy;
+    assign o_timestamp = r_timestamp;
+    assign o_pulseWidth = r_pulseWidth;
+    assign o_hasEvent = r_hasEvent;
 
 
     // save falling edge timing
     always_ff @(posedge clk) begin
-        if (deadtime_done || reset || !enable_channel || !busy) begin
+        if (deadtime_done || reset || !i_enable_channel || !r_busy) begin
             saturate_time <= 0;
         end
-        else if (busy) begin
+        else if (r_busy && find_falling_edge) begin
             if((RisingTime*40 + 5_000_000) < (32'($stime))) begin
                 saturate_time <= 1;
             end

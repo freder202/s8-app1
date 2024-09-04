@@ -11,9 +11,10 @@
 
 
 bind Registers RegisterBankCoverage u_RegisterBankCoverage(
-	.cov_reset(rstn),
+	.cov_reset(reset),
 	.cov_clk(clk),
 	.cov_writeEnable(writeEnable),
+	.cov_writeAck(writeAck),
 	.cov_readEnable(readEnable),
 	.cov_address(address)
 	);
@@ -25,6 +26,7 @@ module RegisterBankCoverage
 	input logic cov_clk,
     input logic cov_writeEnable,
     input logic cov_readEnable,
+    input logic cov_writeAck,
     input logic [7:0] cov_address
 	);
 
@@ -39,11 +41,11 @@ ast_read_strobe_once : assert property(p_read_strobe_once);
 cov_read_strobe_once : cover property(p_read_strobe_once);
 
 // Check that write strobes only 1 clock
-property p_write_strobe_once;
-	$rose(cov_writeEnable) |=> $fell(cov_writeEnable);
+property p_write_ack_once;
+	$rose(cov_writeAck) |=> cov_writeAck ##1 $fell(cov_writeAck);
 endproperty
-ast_write_strobe_once : assert property(p_write_strobe_once);
-cov_wrote_strobe_once : cover property(p_write_strobe_once);
+ast_write_ack_once : assert property(p_write_ack_once);
+cov_write_ack_once : cover property(p_write_ack_once);
 
 // cover group: log if read and write access occured for all
 // documented register address

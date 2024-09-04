@@ -103,7 +103,6 @@ module packet_merger #(
             end
 
             AWAIT_ACK: begin
-                crc_clear_r <= 0;
                 if (!message_if.valid) begin
                     state <= IDLE;
                 end 

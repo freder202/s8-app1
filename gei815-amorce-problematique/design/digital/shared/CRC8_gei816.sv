@@ -86,6 +86,7 @@ module CRC8816 #(parameter
             state <= IDLE;
             r_match = 0;
             r_done = 0;
+            r_crc8 = CRC8_Start;
         end
         else begin
             FSM();

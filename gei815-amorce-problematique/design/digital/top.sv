@@ -143,7 +143,7 @@ module top #(
     Registers #(DATA_LENGTH, ADDRWIDTH)
                 registers_dut(.address(registers_man_if.address), .writeEnable(registers_man_if.writeEnable), 
                               .writeData(registers_man_if.writeData), .readEnable(registers_man_if.readEnable), .clk,
-                              .rstn(!reset), .readData(registers_man_if.readData), .writeAck(registers_man_if.writeAck),
+                              .reset(reset), .readData(registers_man_if.readData), .writeAck(registers_man_if.writeAck),
                               .syncClearStrobe(syncClk_if.clearError), .writeAdmin(registers_man_if.writeAdmin),
                               .update_enable_channel(TDC_en_if.channel_changed));
     
@@ -167,21 +167,30 @@ module top #(
     Timestamp timestamp_module(resetCyclic, clk, timestamp);
     logic[1 :0]                     s_busy;
 
-    TDC_dumb #(CHAN_0) TDC1_dumb_dut(
-        .bus(tdc1_if.internal),
-        .clk(clk),
+
+    TDC_dumb #(CHAN_0) inst_tdc_channel_0(
         .reset(reset),
-        .trigger(sipms[0]),
-        .enable_channel(TDC_en_if.enable_channels[0]),
-        .busy(s_busy[0])
+        .clk(clk),
+        .i_trigger(sipms[0]),
+        .i_enable_channel(TDC_en_if.enable_channels[0]),
+        .i_clear(tdc1_if.clear),
+        .o_busy(s_busy[0]),
+        .o_hasEvent(tdc1_if.hasEvent),
+        .o_chanID(tdc1_if.chan),
+        .o_timestamp(tdc1_if.timestamp),
+        .o_pulseWidth(tdc1_if.timeOverThreshold)
     );
-    TDC_dumb #(CHAN_1) TDC2_dumb_dut(
-        .bus(tdc2_if.internal),
-        .clk(clk),
+    TDC_dumb #(CHAN_1) inst_tdc_channel_1(
         .reset(reset),
-        .trigger(sipms[1]),
-        .enable_channel(TDC_en_if.enable_channels[1]),
-        .busy(s_busy[1])
+        .clk(clk),
+        .i_trigger(sipms[1]),
+        .i_enable_channel(TDC_en_if.enable_channels[1]),
+        .i_clear(tdc2_if.clear),
+        .o_busy(s_busy[1]),
+        .o_hasEvent(tdc2_if.hasEvent),
+        .o_chanID(tdc2_if.chan),
+        .o_timestamp(tdc2_if.timestamp),
+        .o_pulseWidth(tdc2_if.timeOverThreshold)
     );
 
     // TDC_Enable
