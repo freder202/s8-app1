@@ -1,0 +1,30 @@
+//
+// File created by:  xrun
+// Do not modify this file
+//
+-define
+implication_novac
+-rnm_package
+-nowarn
+COVFHT
+-nowarn
+COVCGN
+-nowarn
+COVUTA
+-nowarn
+ICFCLD
+-nowarn
+WSEM2009
+-input
+/home/bilf0901/Bureau/s8-app1/gei815-ashok-mehta-labs-cadence/verif/scripts/misc_commands.tcl
+-gui
+-input
+/home/bilf0901/Bureau/s8-app1/gei815-ashok-mehta-labs-cadence/verif/scripts/waves.tcl
+-ACCESS
++rwc
+-seed
+random
+-sv
+dut.v
+test_dut.sv
+dut_property.sv

@@ -1,0 +1,110 @@
+xrun(64): 23.09-s006: (c) Copyright 1995-2024 Cadence Design Systems, Inc.
+TOOL:	xrun(64)	23.09-s006: Started on Sep 04, 2024 at 14:19:14 EDT
+xrun
+	-define implication_novac
+	-rnm_package
+	-nowarn COVFHT
+	-nowarn COVCGN
+	-nowarn COVUTA
+	-nowarn ICFCLD
+	-nowarn WSEM2009
+	-input /home/bilf0901/Bureau/s8-app1/gei815-ashok-mehta-labs-cadence/verif/scripts/misc_commands.tcl
+	-gui
+	-input /home/bilf0901/Bureau/s8-app1/gei815-ashok-mehta-labs-cadence/verif/scripts/waves.tcl
+	-ACCESS +rwc
+	-seed random
+	-sv
+	dut.v
+	test_dut.sv
+	dut_property.sv
+file: dut_property.sv
+	module worklib.dut_property:sv
+		errors: 0, warnings: 0
+		Caching library 'worklib' ....... Done
+	Elaborating the design hierarchy:
+	Top level design units:
+		test_dut
+		Caching library 'worklib' ....... Done
+	Building instance overlay tables: .................... Done
+	Generating native compiled code:
+		worklib.dut_property:sv <0x325e81cd>
+			streams:   8, words:  6305
+	Building instance specific data structures.
+	Loading native compiled code:     .................... Done
+	Design hierarchy summary:
+		              Instances  Unique
+		Modules:              3       3
+		Registers:           16      16
+		Scalar wires:         4       -
+		Named events:         2       2
+		Always blocks:       12      12
+		Initial blocks:       7       7
+		Pseudo assignments:   3       -
+		Assertions:           2       2
+		Process Clocks:       2       2
+	Writing initial simulation snapshot: worklib.test_dut:sv
+xmsim: *W,NOMTDGUI: Multi-Threaded Dumping is disabled for interactive debug mode.
+SVSEED set randomly from command line: 1988974929
+
+-------------------------------------
+Relinquished control to SimVision...
+xcelium> 
+xcelium> source /mnt/opt/cmc/tools/cadence/XCELIUMMAIN23.09.006_lnx86/tools/xcelium/files/xmsimrc
+xcelium> ########################################################################
+xcelium> ## Author  :    Marc-Andre Tetrault
+xcelium> ## Project :    Verification Primer
+xcelium> ##
+xcelium> ## Universite de Sherbrooke
+xcelium> ########################################################################
+xcelium> #
+xcelium> # Purpose   :   Misc Commands sent to simulator
+xcelium> ########################################################################
+xcelium> 
+xcelium> 
+xcelium> # get the seed. Reference: "SystemVerilog Reference" from Cadence Help tool (cdnshelp)
+xcelium> set RetrievedSeed [set svseed]
+1988974929
+xcelium> puts "The SystemVerilog seed is $RetrievedSeed"
+The SystemVerilog seed is 1988974929
+xcelium> 
+xcelium> # set severity_pack_assert_off {warning}
+xcelium> # set pack_assert_off {  numeric_std }
+xcelium> 
+xcelium> set assert_stop_level never
+never
+xcelium> ########################################################################
+xcelium> ## Author  :    Marc-Andre Tetrault
+xcelium> ## Project :    Verification Primer
+xcelium> ##
+xcelium> ## Universite de Sherbrooke
+xcelium> ########################################################################
+xcelium> 
+xcelium> # save all waveforms by default. Consult the Simvision user guide
+xcelium> # for details on the commands and how to change recording rules
+xcelium> # if disk space is an issue.
+xcelium> 
+xcelium> database -open waves -into waves.shm -default
+Created default SHM database waves
+xcelium> 
+xcelium> probe -create $::env(LAB_TEST_DUT_NAME) -all -depth all -database waves
+Created probe 1
+xcelium> run
+        10  clk=1 req=0 gnt=0
+        30  clk=1 req=1 gnt=0
+        50  clk=1 req=0 gnt=1
+        70  clk=1 req=0 gnt=1
+        90  clk=1 req=1 gnt=0
+       110  clk=1 req=0 gnt=0
+       130  clk=1 req=0 gnt=0
+  @(posedge pclk) preq |-> ##2 pgnt;
+                                  |
+xmsim: *E,ASRTST (./dut_property.sv,23): (time 130 NS) Assertion test_dut.dut1.dut_bind_inst.preqGnt has failed (3 cycles, starting 90 NS)
+       130  		 test_dut.dut1.dut_bind_inst.preqGnt FAIL
+       150  clk=1 req=0 gnt=0
+Memory Usage - Current physical: 84.7M, Current virtual: 376.3M
+CPU Usage - 0.2s system + 0.1s user = 0.3s total (0.8% cpu)
+Simulation complete via $finish(2) at time 150 NS + 0
+./test_dut.sv:65 @(posedge sys_clk); $finish(2);
+xcelium> ^C
+xcelium> exit
+TOOL:	xrun(64)	23.09-s006: Exiting on Sep 04, 2024 at 14:20:59 EDT  (total: 00:01:45)

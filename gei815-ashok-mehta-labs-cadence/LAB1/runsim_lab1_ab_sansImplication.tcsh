@@ -13,7 +13,7 @@
 # set defaults for switches
 set waves=default
 set gui=yes
-set sva=no
+set sva=yes
 set coverage=no
 set randomseed=yes	# change to yes for automatic seed randomization
 
