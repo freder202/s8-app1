@@ -37,6 +37,10 @@ setenv PATH ${CMC_CDS_XCELIUM_HOME}/tools.lnx86/bin:${PATH}
 ##In order to enable coverage analysis, please set the environment variable MDV_XLM_HOME to point to the XCELIUM$
 setenv MDV_XLM_HOME $CMC_CDS_XCELIUM_HOME
 
+# Le mode de régression local n'est plus disponible après 23.03.002. Rester à celle-ci pour le moment
+source $CMC_HOME/scripts/cadence.vmanager23.03.002.csh
+#source $CMC_HOME/scripts/cadence.vmanager23.09.002.csh
+
 # Licence patch. See instructor if issue with vManager licence.
 setenv  HOSTALIASES $PROJECT_ROOT/.hosts_local
 

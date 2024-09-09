@@ -44,7 +44,8 @@ module TDC_enable #(parameter
                         fsm_state <= STATE_WAIT;
                         read_active_channel_r <= 0;
                         // activate_channels[16] is master switch. IF on, all channels enable.
-                        o_active_channel_r = $left(bus.activate_channels) == 1 ? '1 : bus.activate_channels[CHANNEL_COUNT - 1:0];
+                        //o_active_channel_r = $left(bus.activate_channels) == 1 ? '1 : bus.activate_channels[CHANNEL_COUNT - 1:0];
+                        o_active_channel_r = bus.activate_channels[CHANNEL_COUNT - 1:0];
                     end
                 end
             endcase

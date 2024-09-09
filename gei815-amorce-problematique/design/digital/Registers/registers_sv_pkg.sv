@@ -103,7 +103,7 @@ typedef struct packed {
 
 typedef struct packed {
    bit [15:0] ChannelEnable;//bits [15:0]
-   bit [0:0] MasterSwitch;//bits [0:0]
+   //bit [0:0] MasterSwitch;//bits [0:0]
 } ActiveChannels_struct_type;
 
 typedef struct packed {
@@ -118,7 +118,7 @@ const Threshold_struct_type Threshold_reset_value = 0;
 const SrcSelected_struct_type SrcSelected_reset_value = 0;
 const FlagSyncError_struct_type FlagSyncError_reset_value = 0;
 const DisableFlagSync_struct_type DisableFlagSync_reset_value = 0;
-const ActiveChannels_struct_type ActiveChannels_reset_value = 17'h0;
+const ActiveChannels_struct_type ActiveChannels_reset_value = 16'h0;
 const ProductKey_struct_type ProductKey_reset_value = 32'hBADEFACE;
 
 typedef struct packed {
