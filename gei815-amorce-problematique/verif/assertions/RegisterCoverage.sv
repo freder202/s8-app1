@@ -41,17 +41,17 @@ ast_read_strobe_once : assert property(p_read_strobe_once);
 cov_read_strobe_once : cover property(p_read_strobe_once);
 
 // Check that write strobes only 1 clock
-property p_write_ack_once;
+property p_write_ack_twice;
 	$rose(cov_writeAck) |=> cov_writeAck ##1 $fell(cov_writeAck);
 endproperty
-ast_write_ack_once : assert property(p_write_ack_once);
-cov_write_ack_once : cover property(p_write_ack_once);
+ast_write_ack_twice : assert property(p_write_ack_twice);
+cov_write_ack_twice : cover property(p_write_ack_twice);
 
 // cover group: log if read and write access occured for all
 // documented register address
 // Lab: this covergroup will not work properly. Explore why and update.
 covergroup covg_RegisterAccess
-    @(posedge cov_clk iff cov_reset);
+    @(negedge cov_clk);
 	option.name		= "cov_RegisterAccess";
     readMode       : coverpoint cov_readEnable;
     writeMode     : coverpoint cov_writeEnable;

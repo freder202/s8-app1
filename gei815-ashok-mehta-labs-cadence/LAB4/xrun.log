@@ -132,4 +132,8 @@ Memory Usage - Current physical: 91.6M, Current virtual: 387.5M
 CPU Usage - 0.3s system + 0.2s user = 0.5s total (0.9% cpu)
 Simulation complete via $finish(2) at time 325 NS + 0
 ./test_counter.sv:29   @(posedge clk); $finish(2);
-xcelium> 
+xcelium> ^C
+xcelium> exit
+...Regained control from SimVision
+-------------------------------------
+TOOL:	xrun(64)	23.09-s006: Exiting on Sep 09, 2024 at 13:18:37 EDT  (total: 118:30:19)
