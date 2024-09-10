@@ -50,8 +50,6 @@ cov_write_ack_twice : cover property(p_write_ack_twice);
 // cover group: log if read and write access occured for all
 // documented register address
 // Lab: this covergroup will not work properly. Explore why and update.
-
-
 covergroup covg_RegisterAccess
     @(negedge cov_clk);
 	option.name		= "cov_RegisterAccess";
