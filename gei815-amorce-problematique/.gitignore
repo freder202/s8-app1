@@ -3,7 +3,7 @@ cocotb-env/
 
 simdir/*
 
-!simdir/donotdelete
+!simdir/donotdeleteme
 
 .idea/
 
