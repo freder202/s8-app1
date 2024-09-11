@@ -9,7 +9,7 @@ from cocotbext.uart import UartSource, UartSink
 from utilsVerif import print_cocotb_BinaryValue
 import utilsVerif as uv
 from cocotb.log import SimLog
-import MMC_JU as MMC
+import MMC_CRC8 as MMC
 
 #Homemade module
 import init
