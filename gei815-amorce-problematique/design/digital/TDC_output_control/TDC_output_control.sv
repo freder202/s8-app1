@@ -26,6 +26,7 @@ module TDC_output_control #(parameter
     logic [NUMBER_CHANNEL - 1 : 0]              TDC_clear;
     logic [$clog2(NUMBER_CHANNEL) - 1 : 0]      sel_r;
     int i;
+    reg r_write, r_write2;
 
     //mux #(NUMBER_CHANNEL, DATA_LENGTH)
     //            mux_dut (.sel(sel_r), .i_data(data), .o_data(o_data_r));
@@ -38,10 +39,11 @@ module TDC_output_control #(parameter
             sel_r = 0;
             TDC_clear = '{default:1};
             TDC_hasEvents = '{default:0};
-            write = 0;
+            r_write <= 0;
         end else begin
             TDC_clear = 0;
-            write = 0;
+            r_write2 = r_write;
+            r_write <= 0;
             if(!fifo_full)begin
                 
                 // For each TDC, put the data in 68 bits
@@ -55,7 +57,7 @@ module TDC_output_control #(parameter
                     if (TDC_hasEvents[i] == 1) begin
                         sel_r = i[$clog2(NUMBER_CHANNEL) - 1 : 0];
                         TDC_clear = 1 << i;
-                        write = 1;
+                        r_write <= 1;
                         break;
                     end
                 end
@@ -66,5 +68,6 @@ module TDC_output_control #(parameter
     assign o_data = data[sel_r];
     assign sel_OneHot = reset == 0 ? TDC_clear : 0;
     assign {TDC2.clear, TDC1.clear} = TDC_clear;
+    assign write = r_write & !r_write2;
 
 endmodule // TDC_output_control
