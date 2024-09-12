@@ -23,27 +23,41 @@ bind CRC8816 CRC8_Bindings
         .cov_crc8(o_crc8)
 	);
 
-module CRC8_Bindings#(
-    DATA_LENGTH = 32,
-    DATA_LENGTH_BYTES = DATA_LENGTH/8)
+module CRC8_Bindings
+    #(  
+        DATA_LENGTH = 32,
+        DATA_LENGTH_BYTES = DATA_LENGTH/8
+    )
 	(
-	input logic cov_reset,
-	input logic cov_clk,
+        input logic cov_reset,
+        input logic cov_clk,
 
-    input logic cov_valid,
-    input logic cov_last,
-    input logic [7:0] cov_data,
+        input logic cov_valid,
+        input logic cov_last,
+        input logic [7:0] cov_data,
 
-    input logic cov_match,
-    input logic cov_done,
-    input logic [DATA_LENGTH-1:0] cov_crc8
+        input logic cov_match,
+        input logic cov_done,
+        input logic [DATA_LENGTH-1:0] cov_crc8
 	);
 
 default clocking DEFCLK @(posedge cov_clk);
 endclocking
 
+//Assertion section
+property p_reset;
+    $rose(cov_reset) |=> ((cov_match == 0) && (cov_done == 0) && (8'h0D));
+endproperty
+
+ast_reset : assert property(p_reset);
+//cov_reset : cover property(p_reset);
 
 
 
+//Covergroup section
+
+
+
+//
 
 endmodule
