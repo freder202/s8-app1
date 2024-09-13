@@ -133,5 +133,5 @@ class MMC_TEMPLATE(object):
     async def _checker(self) -> None:
        raise NotImplementedError()
    
-class trigger_agent(dut):
-    pass
+# class trigger_agent(dut):
+#     pass
