@@ -14,23 +14,26 @@ from cocotb.runner import get_runner
 from cocotb.triggers import RisingEdge
 from cocotb.log import SimLog
 
-import MMC_TEMPLATE
+from MMC_TEMPLATE import *
 
 #In this case dut is (starting from top) : dut.inst_packet_merger.inst_crc_calc
 class MMC_TDC(MMC_TEMPLATE):
    
+    def __init__(self, dut) -> None:
+        super().__init__(dut)
+        self.input_mon = DataValidMonitor_Template(
+            clk=self.dut.clk,
+            valid=self.dut.i_valid,
+            datas=dict(SigInA=self.dut.i_data, SigInB=self.dut.i_last),
+            Name="InputMonitor"
+        )
+        self.output_mon = DataValidMonitor_Template(
+            clk=self.dut.clk,
+            valid=self.dut.o_done,
+            datas=dict(SigOutA=self.dut.o_match, SigOutB=self.dut.o_done),
+            Name="OutputMonitor"
+        )
 
-    # Insert logic to decide when to check the model against the HDL result.
-    # then compare output monitor result with model result
-    # This example might not work every time.
-
-    """
-    _checker is asynch
-    Called during start()
-    must check every monitor trigger with awaits
-    must also prep the model
-    and must raise exception or asserts to valide the test
-    """
     async def _checker(self) -> None:
         print("[MMC_TDC CLASS] Checker have been triggered!")
 

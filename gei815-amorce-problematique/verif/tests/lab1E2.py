@@ -26,7 +26,7 @@ async def initReset(dut):
     dut.in_sig.value        = 1
     dut.resetCyclic.value   = 1
     dut.sipms[0].value      = 0
-    dut.sipms[1].value      = 1
+    dut.sipms[1].value      = 0
 
     # Confirm type of read signal. Expected: cocotb.binary.BinaryValue
     print(f"[DEBUG] reset.value type : {type(dut.reset.value)}")

@@ -44,6 +44,7 @@ module CRC8_Bindings
 default clocking DEFCLK @(posedge cov_clk);
 endclocking
 
+string crc8_1_3_name = "CRC8.1.3: ";
 //Assertion section
 property p_reset;
     $rose(cov_reset) |=> ((cov_match == 0) && (cov_done == 0) && (8'h0D));
