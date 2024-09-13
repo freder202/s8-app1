@@ -38,7 +38,7 @@ module CRC8_Bindings
 
         input logic cov_match,
         input logic cov_done,
-        input logic [DATA_LENGTH-1:0] cov_crc8
+        input logic [7:0] cov_crc8
 	);
 
 default clocking DEFCLK @(posedge cov_clk);
@@ -49,14 +49,32 @@ property p_reset;
     $rose(cov_reset) |=> ((cov_match == 0) && (cov_done == 0) && (8'h0D));
 endproperty
 
-ast_reset : assert property(p_reset);
-//cov_reset : cover property(p_reset);
+ast_CRC8_reset : assert property(p_reset);
+//cov_CRC8_reset : cover property(p_reset);
 
 
 
 //Covergroup section
+covergroup covg_CRC8
+    @(posedge cov_clk);
+    option.name = "cov_CRC8";
+    reset : coverpoint cov_reset;
+    valid : coverpoint cov_valid;
+    i_last : coverpoint cov_last;
+    i_data : coverpoint cov_data;
+    o_match : coverpoint cov_match;
+    o_done : coverpoint cov_done;
+    o_crc8_0 : coverpoint cov_crc8[0];
+    o_crc8_1 : coverpoint cov_crc8[1];
+    o_crc8_2 : coverpoint cov_crc8[2];
+    o_crc8_3 : coverpoint cov_crc8[3];
+    o_crc8_4 : coverpoint cov_crc8[4];
+    o_crc8_5 : coverpoint cov_crc8[5];
+    o_crc8_6 : coverpoint cov_crc8[6];
+    o_crc8_7 : coverpoint cov_crc8[7];
+endgroup
 
-
+covg_CRC8 cov_CRC8 = new();
 
 //
 
