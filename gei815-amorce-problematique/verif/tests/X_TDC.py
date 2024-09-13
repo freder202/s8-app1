@@ -19,30 +19,30 @@ def initDebug():
     pass
 
 async def initReset(dut):
-    dut.reset.value = 1
-    dut.clk.value = 0
-    dut.i_trigger = 0
-    dut.i_enable_channel = 0
-    dut.i_clear = 0
-    dut.o_busy = 0
-    dut.o_hasEvent = 0
-    dut.o_chanID = 0
-    dut.o_timestamp = 0x0
-    dut.o_pulseWidth = 0x0
+    # dut.reset.value = 1
+    # dut.clk.value = 0
+    # dut.i_trigger = 0
+    # dut.i_enable_channel = 0
+    # dut.i_clear = 0
+    # dut.o_busy = 0
+    # dut.o_hasEvent = 0
+    # dut.o_chanID = 0
+    # dut.o_timestamp = 0x0
+    # dut.o_pulseWidth = 0x0
 
-    # start a 100 MHz clock signal 
-    await cocotb.start(Clock(dut.clk, 10, units='ns').start())
+    # # start a 100 MHz clock signal 
+    # await cocotb.start(Clock(dut.clk, 10, units='ns').start())
 
-    # wait for 10 clock periods triggers every rising edge
-    await cocotb.triggers.ClockCycles(dut.clk, 10, rising=True)
+    # # wait for 10 clock periods triggers every rising edge
+    # await cocotb.triggers.ClockCycles(dut.clk, 10, rising=True)
 
-    # disable reset
-    dut.reset.value = 0
-    await cocotb.triggers.ClockCycles(dut.clk, 1, rising=True)
+    # # disable reset
+    # dut.reset.value = 0
+    # await cocotb.triggers.ClockCycles(dut.clk, 1, rising=True)
 
-    await cocotb.triggers.ClockCycles(dut.clk, 1, rising=True)
+    # await cocotb.triggers.ClockCycles(dut.clk, 1, rising=True)
 
-    print("[DEBUG] INIT DONE!")
+    # print("[DEBUG] INIT DONE!")
 
     pass
 
@@ -50,11 +50,33 @@ async def initReset(dut):
 @cocotb.test()
 async def X_TDC(dut):
 
-    initDebug()
+
+    initDebug("X_TDC")
     await initReset(dut)
 
-    TDC = MMC.MMC_TDC(dut.ins)
+    TDC = MMC.MMC_TDC(dut)
+    TDC.start()
+    
+    
+    # do the initalization of the TDC
+        #init the uart driver
+    pass
 
+
+    # do the tests
+    
+    
+    
+    
+    
+    
+    
+    # test de 10 ns
+    dut.sipms[0].i_trigger = 0
+    await cocotb.triggers.ClockCycles(dut.clk, 1, rising=True)
+    dut.sipms[0].i_trigger = 1
+    
+    
     # print("[DEBUG] Prepping uart...")
     # uart_driver = UartSource(dut.in_sig, baud=1000000, bits=8)
     # uart_sink   = UartSink(dut.out_sig, baud=1000000, bits=8)

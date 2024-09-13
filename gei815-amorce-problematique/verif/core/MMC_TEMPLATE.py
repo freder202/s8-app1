@@ -90,7 +90,6 @@ class MMC_TEMPLATE(object):
     Args
         logicblock_instance: handle to an instance of a logic block
     """
-
     
     def __init__(self, logicblock_instance: SimHandleBase):
      
@@ -131,18 +130,8 @@ class MMC_TEMPLATE(object):
         return [model_result1, model_result2]
 
 
-    # Insert logic to decide when to check the model against the HDL result.
-    # then compare output monitor result with model result
-    # This example might not work every time.
-
-    """
-    _checker is asynch
-    Called during start()
-    must check every monitor trigger with awaits
-    must also prep the model
-    and must raise exception or asserts to valide the test
-    """
-
-
     async def _checker(self) -> None:
        raise NotImplementedError()
+   
+class trigger_agent(dut):
+    pass
