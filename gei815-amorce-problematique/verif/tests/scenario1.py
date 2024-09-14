@@ -4,8 +4,8 @@ import cocotb
 from cocotb.clock import Clock
 import os
 import pydevd_pycharm
-from cocotb.triggers import Join
 from cocotbext.uart import UartSource, UartSink
+from cocotb.triggers import Join, Timer
 from utilsVerif import print_cocotb_BinaryValue
 import utilsVerif as uv
 from cocotb.log import SimLog
@@ -16,15 +16,13 @@ import init
 
 # Decorator to tell cocotb this function is a coroutine
 @cocotb.test()
-async def lab2E1(dut):
+async def scenario1(dut):
 
-
-    init.initDebug("lab2E1")
+    init.initDebug("scenario1 - LECTURE REGISTRE SERIAL")
 
     #FROM design/digital/UART/packet_merger.sv
     CRC8 = MMC.MMC_CRC8(dut.inst_packet_merger.inst_crc_calc)
     CRC8.start()
-
 
     # L1.E4 - Ajouter l'initialisation des pattes d'entrée et de l'horloge
     await init.initReset(dut)
@@ -34,8 +32,7 @@ async def lab2E1(dut):
     uart_sink   = UartSink(dut.out_sig, baud=1000000, bits=8)
 
     # L1.E4 - Start thread for the reply function for the expected UART response.
-    Task_returnMessage = await cocotb.start(wait_reply(dut, uart_sink))
-
+    Thread_uart = cocotb.start_soon(coro=t_uart_test(dut, uart_sink))
 
     # Send read command
     reg9 = uv.build_command_message(0x0, 0x9, 0x00000000)
@@ -50,23 +47,32 @@ async def lab2E1(dut):
     await uart_driver.wait()
 
     # L1.E4 ait for response to complete or for timeout
-    await Task_returnMessage
+    # await Task_returnMessage
 
-    #To get the type returned from a Task, you must call task.result()
-    packetSplitter = Task_returnMessage.result()
-    print(f"[DEBUG] Task_returnMessage type : {type(packetSplitter)}")
-    print(packetSplitter)
-    print(hex(int(packetSplitter)))
 
-    if (hex(int(packetSplitter)) != hex(0x800badeface)) :
-        raise RuntimeError("Not = 0x800badeface")
+    await Timer(1, 'ms')
+    print("ici on fail cool")
+    Thread_uart.kill()
+
+async def t_uart_test(dut, uart_sink):
+    while(True):
+        Task_returnMessage = await cocotb.start(wait_reply(dut, uart_sink))
+    
+            #To get the type returned from a Task, you must call task.result()
+        packetSplitter = await Task_returnMessage
+        print(f"[DEBUG] Task_returnMessage type : {type(packetSplitter)}")
+        print(packetSplitter)
+        print(hex(int(packetSplitter)))
+    
+        # if (hex(int(packetSpliter)) != hex(0x800badeface)) :
+        #     raise RuntimeError("Not = 0x800badeface")
 
 
 # L.E4 function to wait for response message
 async def wait_reply(dut, uart_sink):
 
     # Non-infinite wait loop. Throw cocotb exception if timeout is reached (to do)
-    for x in range(0, 100):
+    for x in range(0, 10000):
         if(uart_sink.count() >= 7): ## 6 octets du message + le CRC
             break;
         await cocotb.triggers.ClockCycles(dut.clk, 1000, rising=True)

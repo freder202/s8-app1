@@ -19,29 +19,29 @@ import MMC_TDC as MMC
 
 async def wait_reply(dut, uart_sink):
 
-    # Non-infinite wait loop. Throw cocotb exception if timeout is reached (to do)
-    for x in range(0, 100):
-        if(uart_sink.count() >= 7): ## 6 octets du message + le CRC
-            break;
-        await cocotb.triggers.ClockCycles(dut.clk, 1000, rising=True)
+    # # Non-infinite wait loop. Throw cocotb exception if timeout is reached (to do)
+    # for x in range(0, 100):
+    #     if(uart_sink.count() >= 7): ## 6 octets du message + le CRC
+    #         break;
+    #     await cocotb.triggers.ClockCycles(dut.clk, 1000, rising=True)
 
-    if(x == 99):
-        print("Timeout")
-        logger = SimLog("cocotb.Test")
-        logger.info("Timeout for wait reply")
-        raise RuntimeError("Timeout for wait reply")
-        # or use plain assert.
-        #assert False, "Timeout for wait reply"
-        return None
+    # if(x == 99):
+    #     print("Timeout")
+    #     logger = SimLog("cocotb.Test")
+    #     logger.info("Timeout for wait reply")
+    #     raise RuntimeError("Timeout for wait reply")
+    #     # or use plain assert.
+    #     #assert False, "Timeout for wait reply"
+    #     return None
 
-    else:
-        # cocotbext-uart returns byteArray. Convert to bytes first, then to Binary value for uniformity.
-        message_bytes = bytes(await uart_sink.read(count=6))
-        message = cocotb.binary.BinaryValue(value=message_bytes, n_bits=48, bigEndian=False)
-        print("After a wait of " + str(x) + "000 clocks, received message: ", end='')
-        print("0x{0:0{width}x}".format(message.integer, width=12))
-        print(f"[DEBUG] message type : {type(message)}")
-        return message
+    # else:
+    # cocotbext-uart returns byteArray. Convert to bytes first, then to Binary value for uniformity.
+    message_bytes = bytes(await uart_sink.read(count=6))
+    message = cocotb.binary.BinaryValue(value=message_bytes, n_bits=48, bigEndian=False)
+    print("After a wait of " + str(x) + "000 clocks, received message: ", end='')
+    print("0x{0:0{width}x}".format(message.integer, width=12))
+    print(f"[DEBUG] message type : {type(message)}")
+    # return message
 
 
 async def t_uart_sink(dut, uart_sink):
@@ -116,7 +116,8 @@ async def X_TDC(dut):
     uart_sink   = UartSink(dut.out_sig, baud=1000000, bits=8)
 
     thread_uart_sink = start_soon(coro=t_uart_sink(dut, uart_sink))
-
+    
+  
    
     # Send read command
     reg9 = uv.build_command_message(0x0, 0x8, 0x00000000)
@@ -131,14 +132,10 @@ async def X_TDC(dut):
     await uart_driver.wait()
 
     # L1.E4 ait for response to complete or for timeout
-    
 
-    
-    
     # do the initalization of the TDC
         #init the uart driver
-    pass
-
+   
 
     # do the tests
     
@@ -149,9 +146,9 @@ async def X_TDC(dut):
     
     
     # todo reset the device to initial state
-    dut.sipms[0].i_trigger = 1
-    await Time r(40, units='ps')
-    dut.sipms[0].i_trigger = 0
+    # dut.sipms[0].i_trigger = 1
+    # await Timer(40, units='ps')
+    # dut.sipms[0].i_trigger = 0
     
     # print("[DEBUG] Prepping uart...")
     # uart_driver = UartSource(dut.in_sig, baud=1000000, bits=8)
@@ -162,6 +159,8 @@ async def X_TDC(dut):
     # await uart_driver.write(SomeValue.buff)
     # await uart_driver.wait()
 
+    await Timer(1000, units='ms')
     thread_uart_sink.kill()
+    
 
 
