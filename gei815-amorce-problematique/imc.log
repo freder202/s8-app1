@@ -1,9 +1,0 @@
-IMC(64): 23.03-s002: (c) Copyright 1995-2023 Cadence Design Systems Inc - Simulator version: 23.09-s006 - Coverage engine version: 23.09-s006
-Starting gui mode
-imc: *I,imc.tool.cov.version.diff: "There is a difference between the IMC tool version 23.03 and the coverage version 23.09-s006"
-<<<<<<< HEAD
-imc: *I,RUNLD: Successfully loaded run /home/guaj2506/Bureau/s8-app1/gei815-amorce-problematique/simdir/sim_build/cov_work/scope/lab1E2.
-imc: *I,RUNLD: Successfully loaded run /home/guaj2506/Bureau/s8-app1/gei815-amorce-problematique/simdir/sim_build/cov_work/scope/lab2E1.
-=======
-imc: *I,RUNLD: Successfully loaded run /home/bilf0901/Bureau/s8-app1/gei815-amorce-problematique/simdir/sim_build/cov_work/scope/lab1E2.
->>>>>>> fred-tdc

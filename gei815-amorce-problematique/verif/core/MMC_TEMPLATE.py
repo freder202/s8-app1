@@ -124,11 +124,11 @@ class MMC_TEMPLATE(object):
     In this specific case, it should be a CRC calculator.
     """
     def model(self, InputsA: List[int], InputsB: List[int]) -> List[int]:
-        # equivalent model to HDL code
-        model_result1 = 0
-        model_result2 = 1
-        return [model_result1, model_result2]
-
+        # # equivalent model to HDL code
+        # model_result1 = 0
+        # model_result2 = 1
+        # return [model_result1, model_result2]
+        raise NotImplementedError()
 
     async def _checker(self) -> None:
        raise NotImplementedError()

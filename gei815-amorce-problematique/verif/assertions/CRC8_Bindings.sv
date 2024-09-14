@@ -44,14 +44,31 @@ module CRC8_Bindings
 default clocking DEFCLK @(posedge cov_clk);
 endclocking
 
-string crc8_1_3_name = "CRC8.1.3: ";
 //Assertion section
 property p_reset;
-    $rose(cov_reset) |=> ((cov_match == 0) && (cov_done == 0) && (8'h0D));
+    @(posedge cov_clk) $rose(cov_reset) |=> ((cov_match == 0) && (cov_done == 0) && (cov_crc8 == 8'h0D));
 endproperty
 
 ast_CRC8_reset : assert property(p_reset);
 //cov_CRC8_reset : cover property(p_reset);
+
+property p_last;
+    @(posedge cov_clk) disable iff (cov_reset)
+    $rose(cov_last) |-> cov_valid;
+endproperty
+ast_CRC8_last : assert property(p_last);
+
+property p_done;
+    @(posedge cov_clk) disable iff (cov_reset)
+    $fell(cov_last) |-> ##2 cov_done;
+endproperty
+ast_CRC8_done : assert property(p_done);
+
+property p_done_only_on_rst;
+    @(posedge cov_clk) disable iff (cov_reset)
+    $fell(cov_done) |=> (cov_reset == 1);
+endproperty
+ast_done_only_on_rst : assert property(p_done_only_on_rst);
 
 
 
@@ -62,18 +79,29 @@ covergroup covg_CRC8
     reset : coverpoint cov_reset;
     valid : coverpoint cov_valid;
     i_last : coverpoint cov_last;
-    i_data : coverpoint cov_data;
+    i_data_full : coverpoint cov_data {bins poss_in_val[] = {[0:255]};}
+    i_data_0 : coverpoint cov_data[0];
+    i_data_1 : coverpoint cov_data[1];
+    i_data_2 : coverpoint cov_data[2];
+    i_data_3 : coverpoint cov_data[3];
+    i_data_4 : coverpoint cov_data[4];
+    i_data_5 : coverpoint cov_data[5];
+    i_data_6 : coverpoint cov_data[6];
+    i_data_7 : coverpoint cov_data[7];
     o_match : coverpoint cov_match;
     o_done : coverpoint cov_done;
-    o_crc8_0 : coverpoint cov_crc8[0];
-    o_crc8_1 : coverpoint cov_crc8[1];
-    o_crc8_2 : coverpoint cov_crc8[2];
-    o_crc8_3 : coverpoint cov_crc8[3];
-    o_crc8_4 : coverpoint cov_crc8[4];
-    o_crc8_5 : coverpoint cov_crc8[5];
-    o_crc8_6 : coverpoint cov_crc8[6];
-    o_crc8_7 : coverpoint cov_crc8[7];
+    o_crc8_full : coverpoint cov_crc8 {bins poss_out_val[] = {[0:255]};}
+    o_crc8_0 : coverpoint cov_crc8[0] with { i_data_full && 1 };
+    o_crc8_1 : coverpoint cov_crc8[1] with { i_data_full >> 1 && 1 };
+    o_crc8_2 : coverpoint cov_crc8[2] with { i_data_full >> 2 && 1 };
+    o_crc8_3 : coverpoint cov_crc8[3] with { i_data_full >> 3 && 1 };
+    o_crc8_4 : coverpoint cov_crc8[4] with { i_data_full >> 4 && 1 };
+    o_crc8_5 : coverpoint cov_crc8[5] with { i_data_full >> 5 && 1 };
+    o_crc8_6 : coverpoint cov_crc8[6] with { i_data_full >> 6 && 1 };
+    o_crc8_7 : coverpoint cov_crc8[7] with { i_data_full >> 7 && 1 };
 endgroup
+
+
 
 covg_CRC8 cov_CRC8 = new();
 

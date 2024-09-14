@@ -34,6 +34,13 @@ class MMC_TDC(MMC_TEMPLATE):
             Name="OutputMonitor"
         )
 
+        def model(self, InputsA: List[int], InputsB: List[int]) -> List[int]:
+        # equivalent model to HDL code # TODO FAIRE UN VRAI MODELE CRC8
+            model_result1 = 0
+            model_result2 = 1
+            return [model_result1, model_result2]
+            
+
     async def _checker(self) -> None:
         print("[MMC_TDC CLASS] Checker have been triggered!")
 
