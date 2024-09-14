@@ -24,18 +24,13 @@ class DataValidMonitor_Template:
         datas: named handles to be sampled when transaction occurs
     """
         # this dont need to change from template to template (FB) 
-    def __init__(
-        self, clk: SimHandleBase, valid: SimHandleBase,
-        datas: Dict[str, SimHandleBase], Name:str = "Stock Name"
-    ):
+    def __init__(self, clk: SimHandleBase, valid: SimHandleBase, datas: Dict[str, SimHandleBase], Name:str = "Stock Name"):
         self.values = Queue[Dict[str, int]]()
         self._clk = clk
         self._datas = datas
         self._valid = valid
         self._coro = None # is monitor running? False if "None"
-
         self.Name = Name
-
         self.log = SimLog("cocotb.Monitor.%s" % (type(self).__qualname__))
 
         # this dont need to change from template to template (FB) 
@@ -44,7 +39,6 @@ class DataValidMonitor_Template:
         if self._coro is not None:
             raise RuntimeError("Monitor already started")
         self._coro = cocotb.start_soon(self._run())
-
 
         # this dont need to change from template to template (FB) 
     def stop(self) -> None:
@@ -84,22 +78,6 @@ class DataValidMonitor_Template:
 
 #In this case dut is (starting from top) : dut.inst_packet_merger.inst_crc_calc
 class MMC_TEMPLATE(object):
-    """
-    Reusable checker of a checker instance
-
-    Args
-        logicblock_instance: handle to an instance of a logic block
-    """
-    
-    def __init__(self, logicblock_instance: SimHandleBase):
-     
-        self.dut = logicblock_instance
-
-        self._checkercoro = None
-
-        self.log = SimLog("[SIMLOG] cocotb.MMC.%s" % (type(self).__qualname__))
-
-        print("[MMC_TDC] Class instantiated")
 
     def start(self) -> None:
         """Starts monitors, model, and checker coroutine"""
@@ -118,20 +96,22 @@ class MMC_TEMPLATE(object):
         self._checkercoro.kill()
         self._checkercoro = None
 
-    """
-    The model is supposed to be used in _checker() to compares the results from the monitors
-    and it's own value. Every model is unique to it's test and must be created from scratch everytime.
-    In this specific case, it should be a CRC calculator.
-    """
+    # abstract methode to be implemented in the child class 
+    def __init__(self, logicblock_instance: SimHandleBase):
+        self.dut = logicblock_instance
+        self._checkercoro = None
+        self.log = SimLog("[SIMLOG] cocotb.MMC.%s" % (type(self).__qualname__))
+        print("[MMC_TDC] Class instantiated")
+
+    
+    # abstract methode to be implemented in the child class
     def model(self, InputsA: List[int], InputsB: List[int]) -> List[int]:
+        raise NotImplementedError()
         # # equivalent model to HDL code
         # model_result1 = 0
         # model_result2 = 1
         # return [model_result1, model_result2]
-        raise NotImplementedError()
 
+    # abstract methode to be implemented in the child class
     async def _checker(self) -> None:
-       raise NotImplementedError()
-   
-# class trigger_agent(dut):
-#     pass
+        raise NotImplementedError()
