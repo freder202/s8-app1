@@ -1,5 +1,6 @@
 import sys
 
+
 import random
 import cocotb
 from cocotb.clock import Clock
@@ -35,13 +36,12 @@ async def scenario2(dut):
     message_queue = cocotb.queue.Queue()
     # L1.E4 - Start thread for the reply function for the expected UART response.
 
-
-    # Loop 96 times to send a command to the DUT and wait for the response
     for i in range(96):
+        i = i + 1
         Thread_uart = cocotb.start_soon(coro=wait_reply(dut, uart_sink, message_queue))
         # Send read command
-        # value = random.randint(0, 0xFFFFFFFF)
-        reg9 = uv.build_command_message(0x0, i, i)
+        value = random.randint(0, 0xFFFFFFFF)
+        reg9 = uv.build_command_message(0x0, 0x0 + i, 0x0 +i)
         print(f"[DEBUG] Loop {i+1} ------------------------")
         print(f"[DEBUG] Loop {i+1}: Sending command {hex(reg9)}")
         await uart_driver.write(reg9.buff)
@@ -54,58 +54,38 @@ async def scenario2(dut):
         await uart_driver.wait()
 
         # Wait for response to complete or for timeout
-        # Task_returnMessage = await cocotb.start(wait_reply(dut, uart_sink, message_queue))
-        Task_returnMessage = await Thread_uart
-        packetSplitter = Task_returnMessage
+        packetSplitter = await Thread_uart
         print(f"[DEBUG] Loop {i+1}: Received response {hex(int(packetSplitter))}")
+        message, crc = await message_queue.get()
+        # print(f"[LOOP END] -- data: 0x{message} -- crc: 0x{crc}")
+        # print(f"[LOOP END] -- data: {message} -- crc: {crc}")
+        await CRC8._checker()       
 
-        # Optional: Add a small delay between iterations if needed
-        # print(f"[DEBUG] Loop {i+1}: Received response {await message_queue.get()} \n\n\n")
-        
-        # while message_queue.empty():
-        #     # print("are we empty ?")
-        #     await Timer(10, 'ns')
-        # await wait_reply
-        
-        # message_queue.pop()
-            
-
-    await Timer(1500, 'us')
-    print("ici on fail cool")
+    print("ici on a fini cool")
 
 
 async def wait_reply(dut, uart_sink, message_queue):
     # Non-infinite wait loop. Throw cocotb exception if timeout is reached (to do)
     for x in range(0, 100):
-        print(x)
         if uart_sink.count() >= 7:  # 6 octets du message + le CRC
             break
         await cocotb.triggers.ClockCycles(dut.clk, 1000, rising=True)
 
     if x == 99:
         print("Timeout")
-       
         logger = SimLog("cocotb.Test")
         logger.info("Timeout for wait reply")
         raise RuntimeError("Timeout for wait reply")
         # await message_queue.put(None)
         return None
     else:
-        # cocotbext-uart returns byteArray. Convert to bytes first, then to Binary value for uniformity.
         message_bytes = bytes(await uart_sink.read(count=6))
         crc_bytes = bytes(await uart_sink.read(count=1))
         message = cocotb.binary.BinaryValue(value=message_bytes, n_bits=48, bigEndian=False)
-        print("After a wait of " + str(x) + "000 clocks, received message: ", end='')
-        print("0x{0:0{width}x}".format(message.integer, width=12))
+        crc = cocotb.binary.BinaryValue(value=crc_bytes, n_bits=8, bigEndian=False)
+        print("After a wait of " + str(x) + "000 clocks, received message: ")
+        print("MESSAGE : 0x{0:0{width}x}".format(message.integer, width=12))
+        print("CRC     : 0x{0:0{width}x}".format(crc.integer, width=12))
         print(f"[DEBUG] message type : {type(message)}")
-        # message_queue.put(message)
+        await message_queue.put((message, crc_bytes))
         return message
-
-async def t_uart_test(dut, uart_sink,message_queue):
-    Task_returnMessage = await cocotb.start(wait_reply(dut, uart_sink,message_queue))
-
-    packetSplitter = await Task_returnMessage
-    print(f"[DEBUG] Task_returnMessage type : {type(packetSplitter)}")
-    print(packetSplitter)
-    print(hex(int(packetSplitter)))
-

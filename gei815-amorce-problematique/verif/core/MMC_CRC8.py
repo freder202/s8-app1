@@ -24,83 +24,82 @@ class MMC_CRC8(MMC_TEMPLATE):
         self.input_mon = DataValidMonitor_Template(
             clk=self.dut.clk,
             valid=self.dut.i_valid,
-            datas=dict(SigInA=self.dut.i_data, SigInB=self.dut.i_last),
+            datas=dict(SigInI_DATA=self.dut.i_data, SigInI_LAST=self.dut.i_last),
             Name="InputMonitor"
         )
         self.output_mon = DataValidMonitor_Template(
             clk=self.dut.clk,
             valid=self.dut.o_done,
-            datas=dict(SigOutA=self.dut.o_match, SigOutB=self.dut.o_done),
+            datas=dict(SigOutO_MATCH=self.dut.o_match, SigOutO_DONE=self.dut.o_done),
             Name="OutputMonitor"
         )
 
-        def model(self, InputsA: List[int], InputsB: List[int]) -> List[int]:
-        # equivalent model to HDL code
-            model_result1 = 0
-            model_result2 = 1
-            return [model_result1, model_result2]
+    def model(self, InputsA: List[int], InputsB: List[int]) -> List[int]:
+    # equivalent model to HDL code
+        print("we are in the model")
+        print(InputsA)
+        print(InputsB)
+        model_result1 = 0
+        model_result2 = 1
+        return [model_result1, model_result2]
 
 
     async def _checker(self) -> None:
         print("[MMC_CRC8 CLASS] Checker have been triggered!")
-
         #init variable
         iLastVar = False
         oLastVar = False
-        TestDone = False
+        isTestDone = False
 
-        # #  todo faire une boucle ici 
-        # #TODO COLLECT DATA FROM int(inval["SigInA"]) and input it in a model then assert CRC
-        # # while True:
-        # # dummy await, allows to run without checker implementation and verify monitors
-        # ##############################DO NOT DELETE##################################
-        # # GIVE AT LEAST 1 CLOCK CYCLE THE GODDAM WHOLE TEST CRASH WITHOUT THIS
-        # await cocotb.triggers.ClockCycles(self.dut.clk, 100, rising=True)
-        # ##############################DO NOT DELETE##################################
-        # if(TestDone == False):
-        #     #lab2E1 : wait until queue is full
-        #     inqsize = self.input_mon.values.qsize()
-        #     if(inqsize != 0):
-        #         #print(inqsize)
-        #         pass
-        #     if(inqsize == 7):
-        #         while(self.input_mon.values.empty() != True):
-        #             inval = await self.input_mon.values.get()
-        #             print(inval)
-        #             if(int(inval["SigInB"]) == 1):
-        #                 iLastVar = True
-        #         inqsize.empty()
-        #         pass
+        # GIVE AT LEAST 1 CLOCK CYCLE THE GODDAM WHOLE TEST CRASH WITHOUT THIS        
+        await cocotb.triggers.ClockCycles(self.dut.clk, 100, rising=True)
 
-        #     outqsize = self.output_mon.values.qsize()
-        #     if(outqsize != 0):
-        #         print(f"Outqsize = {outqsize}")
-        #         outval = await self.output_mon.values.get()
-        #         if(int(outval["SigOutB"]) == 1):
-        #             oLastVar = True
+        print(self.input_mon.values.qsize())
 
-        #     if( (iLastVar == True) and (oLastVar == True)):
-        #         if(int(outval["SigOutA"]) == 1):
-        #             print("o_match == TRUE")
-        #             assert True
-        #         else:
-        #             assert False
+        ##############################DO NOT DELETE##################################
+        while(isTestDone == False):
+            #lab2E1 : wait until queue is full
+            if(self.input_mon.values.qsize() != 0):
+                #print(inqsize)
+                pass
+            if(self.input_mon.values.qsize() >= 7):
+                print("WE HAVE ENOUGH VALUE FOR THE TEST")
+                while(self.input_mon.values.empty() != True):
+                    inval = await self.input_mon.values.get()
+                    print(inval)
+                    if(int(inval["SigInI_LAST"]) == 1):
+                        iLastVar = True
+                # inqsize.empty()
+                isTestDone = True
 
-        #     TestDone = True
+        outqsize = self.output_mon.values.qsize()
+        if(outqsize != 0):
+            print(f"Outqsize = {outqsize}")
+            outval = await self.output_mon.values.get()
+            if(int(outval["SigOutO_DONE"]) == 1):
+                oLastVar = True
+
+        if( (iLastVar == True) and (oLastVar == True)):
+            if(int(outval["SigOutO_MATCH"]) == 1):
+                print("o_match == TRUE")
+                assert True
+            else:
+                assert False
                 
             
-        #     """
-        #     actual = await self.output_mon.values.get()
-        #     expected_inputs = await self.input_mon.values.get()
-        #     expected = self.model(
-        #         InputsA=expected_inputs["SignalA"], InputsB=expected_inputs["SignalB"]
+        expected_inputs = await self.input_mon.values.get()
+        actual = await self.output_mon.values.get()
+        print(f"Actual : {actual}")
+        print(f"Expected : {expected_inputs}")
+        
+        #     expected = self.model(InputsA=expected_inputs["SigInA"], InputsB=expected_inputs["SigInB"]
         #     )
 
         #     # compare expected with actual using assertions. Exact indexing must
         #     # be adapted to specific case and model return value
-        #     assert actual["SignalC"] == expected[0]
-        #     assert actual["SignalD"] == expected[1]
-        #     """
+        #     # assert actual["SigOutA"] == expected[0]
+        #     # assert actual["SigOutB"] == expected[1]
+        #     assert True
 
 
 

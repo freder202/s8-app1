@@ -70,7 +70,7 @@ class DataValidMonitor_Template:
         """
         # possible messages to test monitor
         # self.log.info(f"[{self.Name}] Data sampled!")
-        # #self.log.info({name: handle.value for name, handle in self._datas.items()})
+        # self.log.info({name: handle.value for name, handle in self._datas.items()})
 
 
         # # for loop going through all the values in the signals to sample (see constructor)
