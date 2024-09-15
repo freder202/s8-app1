@@ -49,7 +49,7 @@ class MMC_CRC8(MMC_TEMPLATE):
         oLastVar = False
         TestDone = False
 
-
+        #  todo faire une boucle ici 
         #TODO COLLECT DATA FROM int(inval["SigInA"]) and input it in a model then assert CRC
         while True:
             # dummy await, allows to run without checker implementation and verify monitors
@@ -69,6 +69,7 @@ class MMC_CRC8(MMC_TEMPLATE):
                         print(inval)
                         if(int(inval["SigInB"]) == 1):
                             iLastVar = True
+                    inqsize.empty()
                     pass
 
                 outqsize = self.output_mon.values.qsize()
@@ -85,7 +86,9 @@ class MMC_CRC8(MMC_TEMPLATE):
                     else:
                         assert False
 
-                    TestDone = True
+                TestDone = True
+                    
+                
                 """
                 actual = await self.output_mon.values.get()
                 expected_inputs = await self.input_mon.values.get()
