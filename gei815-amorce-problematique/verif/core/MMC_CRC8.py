@@ -49,58 +49,58 @@ class MMC_CRC8(MMC_TEMPLATE):
         oLastVar = False
         TestDone = False
 
-        #  todo faire une boucle ici 
-        #TODO COLLECT DATA FROM int(inval["SigInA"]) and input it in a model then assert CRC
-        while True:
-            # dummy await, allows to run without checker implementation and verify monitors
-            ##############################DO NOT DELETE##################################
-            # GIVE AT LEAST 1 CLOCK CYCLE THE GODDAM WHOLE TEST CRASH WITHOUT THIS
-            await cocotb.triggers.ClockCycles(self.dut.clk, 100, rising=True)
-            ##############################DO NOT DELETE##################################
-            if(TestDone == False):
-                #lab2E1 : wait until queue is full
-                inqsize = self.input_mon.values.qsize()
-                if(inqsize != 0):
-                    #print(inqsize)
-                    pass
-                if(inqsize == 7):
-                    while(self.input_mon.values.empty() != True):
-                        inval = await self.input_mon.values.get()
-                        print(inval)
-                        if(int(inval["SigInB"]) == 1):
-                            iLastVar = True
-                    inqsize.empty()
-                    pass
+        # #  todo faire une boucle ici 
+        # #TODO COLLECT DATA FROM int(inval["SigInA"]) and input it in a model then assert CRC
+        # # while True:
+        # # dummy await, allows to run without checker implementation and verify monitors
+        # ##############################DO NOT DELETE##################################
+        # # GIVE AT LEAST 1 CLOCK CYCLE THE GODDAM WHOLE TEST CRASH WITHOUT THIS
+        # await cocotb.triggers.ClockCycles(self.dut.clk, 100, rising=True)
+        # ##############################DO NOT DELETE##################################
+        # if(TestDone == False):
+        #     #lab2E1 : wait until queue is full
+        #     inqsize = self.input_mon.values.qsize()
+        #     if(inqsize != 0):
+        #         #print(inqsize)
+        #         pass
+        #     if(inqsize == 7):
+        #         while(self.input_mon.values.empty() != True):
+        #             inval = await self.input_mon.values.get()
+        #             print(inval)
+        #             if(int(inval["SigInB"]) == 1):
+        #                 iLastVar = True
+        #         inqsize.empty()
+        #         pass
 
-                outqsize = self.output_mon.values.qsize()
-                if(outqsize != 0):
-                    print(f"Outqsize = {outqsize}")
-                    outval = await self.output_mon.values.get()
-                    if(int(outval["SigOutB"]) == 1):
-                        oLastVar = True
+        #     outqsize = self.output_mon.values.qsize()
+        #     if(outqsize != 0):
+        #         print(f"Outqsize = {outqsize}")
+        #         outval = await self.output_mon.values.get()
+        #         if(int(outval["SigOutB"]) == 1):
+        #             oLastVar = True
 
-                if( (iLastVar == True) and (oLastVar == True)):
-                    if(int(outval["SigOutA"]) == 1):
-                        print("o_match == TRUE")
-                        assert True
-                    else:
-                        assert False
+        #     if( (iLastVar == True) and (oLastVar == True)):
+        #         if(int(outval["SigOutA"]) == 1):
+        #             print("o_match == TRUE")
+        #             assert True
+        #         else:
+        #             assert False
 
-                TestDone = True
-                    
+        #     TestDone = True
                 
-                """
-                actual = await self.output_mon.values.get()
-                expected_inputs = await self.input_mon.values.get()
-                expected = self.model(
-                    InputsA=expected_inputs["SignalA"], InputsB=expected_inputs["SignalB"]
-                )
-    
-                # compare expected with actual using assertions. Exact indexing must
-                # be adapted to specific case and model return value
-                assert actual["SignalC"] == expected[0]
-                assert actual["SignalD"] == expected[1]
-                """
+            
+        #     """
+        #     actual = await self.output_mon.values.get()
+        #     expected_inputs = await self.input_mon.values.get()
+        #     expected = self.model(
+        #         InputsA=expected_inputs["SignalA"], InputsB=expected_inputs["SignalB"]
+        #     )
+
+        #     # compare expected with actual using assertions. Exact indexing must
+        #     # be adapted to specific case and model return value
+        #     assert actual["SignalC"] == expected[0]
+        #     assert actual["SignalD"] == expected[1]
+        #     """
 
 
 

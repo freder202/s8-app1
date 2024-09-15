@@ -69,11 +69,11 @@ class DataValidMonitor_Template:
         Return value is what is stored in queue. Meant to be overriden by the user.
         """
         # possible messages to test monitor
-        self.log.info(f"[{self.Name}] Data sampled!")
-        #self.log.info({name: handle.value for name, handle in self._datas.items()})
+        # self.log.info(f"[{self.Name}] Data sampled!")
+        # #self.log.info({name: handle.value for name, handle in self._datas.items()})
 
 
-        # for loop going through all the values in the signals to sample (see constructor)
+        # # for loop going through all the values in the signals to sample (see constructor)
         return {name: handle.value for name, handle in self._datas.items()}
 
 #In this case dut is (starting from top) : dut.inst_packet_merger.inst_crc_calc
