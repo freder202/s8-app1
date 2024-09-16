@@ -36,6 +36,7 @@ from MMC_TEMPLATE import *
 class MMC_CRC8(MMC_TEMPLATE):
     
     def __init__(self, dut) -> None:
+        self.message_queue = cocotb.queue.Queue()
         super().__init__(dut)
         self.input_mon = DataValidMonitor_Template(
             clk=self.dut.clk,
@@ -158,7 +159,10 @@ class MMC_CRC8(MMC_TEMPLATE):
                         assert True
                     else:
                         print("[MMC_CRC8 CLASS -- Assertion] o_match == FALSE")
-                        assert False
+                        if self.message_queue["good_test"] == False:
+                            assert True    
+                        else:
+                            assert False
 
                     test_state = isSubTestDone.TEST_DONE
                     TestDone = True

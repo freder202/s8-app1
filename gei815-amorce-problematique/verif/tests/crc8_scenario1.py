@@ -24,6 +24,7 @@ async def crc8_scenario1(dut):
     #FROM design/digital/UART/packet_merger.sv
     CRC8 = MMC.MMC_CRC8(dut.inst_packet_merger.inst_crc_calc)
     CRC8.start()
+    CRC8.message_queue = {"good_test" : True}
 
     # L1.E4 - Ajouter l'initialisation des pattes d'entrée et de l'horloge
     await init.initReset(dut)
@@ -49,13 +50,6 @@ async def crc8_scenario1(dut):
 
     # L1.E4 ait for response to complete or for timeout
     # await Task_returnMessage
-
-
-    dut.sipm[0].value = 1
-    await Timer(2500, 'ns') # 2.5 us
-    dut.sipm[0].value = 0
-
-    await Timer(2500, 'ns') # include 2 us + 1 clk + interpolation time 200ns
 
 
     print("ici on fail cool")

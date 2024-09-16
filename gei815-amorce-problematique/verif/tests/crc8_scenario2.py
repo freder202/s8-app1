@@ -25,6 +25,7 @@ async def crc8_scenario2(dut):
     #FROM design/digital/UART/packet_merger.sv
     CRC8 = MMC.MMC_CRC8(dut.inst_packet_merger.inst_crc_calc)
     CRC8.start()
+    CRC8.message_queue = {"good_test" : True}
 
     # L1.E4 - Ajouter l'initialisation des pattes d'entrée et de l'horloge
     await init.initReset(dut)

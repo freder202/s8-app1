@@ -22,6 +22,16 @@ group example_group {
     run_mode : batch;
     run_script : $ENV(VERIF_ROOT)/scripts/do_vmanager_runsim.tcsh;
 
-    test sanity {count : 1;};
-    test sanity_random {count : 10;};
-};
+    // test sanity {count : 1;};
+    // test sanity_random {count : 10;};
+    test tdc_scenario1 {count : 1;};
+    test tdc_scenario2 {count : 1;};
+    test tdc_scenario3 {count : 1;};
+    test tdc_scenario4 {count : 1;};
+    test tdc_scenario5 {count : 1;};
+    test tdc_scenario6 {count : 1;};
+    test tdc_scenario7 {count : 1;};
+    test crc8_scenario1 {count : 1;};
+    test crc8_scenario2 {count : 1;};
+    test crc8_scenario3 {count : 1;};
+   };
