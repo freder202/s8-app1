@@ -38,8 +38,6 @@ async def tdc_scenario1(dut):
     # L1.E4 - Start thread for the reply function for the expected UART response.
     Thread_uart = cocotb.start_soon(coro=t_uart_test(dut, uart_sink))
 
-    # TODO send the init 
-    # TODO send the enable channel 0
 
     # Send read command
     reg9 = uv.build_command_message(uv.Command.WRITE.value, 0x8, 0x01)
@@ -55,18 +53,12 @@ async def tdc_scenario1(dut):
 
     # entropic wait to settle 
     await Timer(50,'ns') 
-    
 
     dut.sipms[0].value = 1
-
     await Timer(TDC.message_queue["time_tested"][0], TDC.message_queue["time_tested"][1]) # 2.5 us
-
     dut.sipms[0].value = 0
 
     await Timer(2500, 'ns') # include 2 us + 1 clk + interpolation time 200ns
-    
-    # L1.E4 ait for response to complete or for timeout
-    # await Task_returnMessage
 
     await Timer(150, 'us')
     print("ici on fail cool")
@@ -82,10 +74,8 @@ async def t_uart_test(dut, uart_sink):
         print(hex(int(packetSplitter)))
         break;
 
-# L.E4 function to wait for response message
-async def wait_reply(dut, uart_sink):
 
-    # Non-infinite wait loop. Throw cocotb exception if timeout is reached (to do)
+async def wait_reply(dut, uart_sink):
     for x in range(0, 200):
         if(uart_sink.count() >= 7): ## 6 octets du message + le CRC
             break;
@@ -96,8 +86,6 @@ async def wait_reply(dut, uart_sink):
         logger = SimLog("cocotb.Test")
         logger.info("Timeout for wait reply")
         raise RuntimeError("Timeout for wait reply")
-        # or use plain assert.
-        #assert False, "Timeout for wait reply"
         return None
 
     else:

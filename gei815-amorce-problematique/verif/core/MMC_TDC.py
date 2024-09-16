@@ -81,45 +81,23 @@ class MMC_TDC(MMC_TEMPLATE):
         print(test_time_as_ps // 40)
         print(int(InputsB['SigOutD']))
         
-        return [is_pulse_width_valid, model_result2]
+        return [is_pulse_width_valid]
             
 
     async def _checker(self) -> None:
         print("[MMC_TDC CLASS] Checker have been triggered!")
 
-        #init variable
         iLastVar = False
         oLastVar = False
         TestDone = False
 
-
-        print("poil")
-
         # #TODO COLLECT DATA FROM int(inval["SigInA"]) and input it in a model then assert CRC
         while True:
-            # dummy await, allows to run without checker implementation and verify monitors
             ##############################DO NOT DELETE##################################
             # GIVE AT LEAST 1 CLOCK CYCLE THE GODDAM WHOLE TEST CRASH WITHOUT THIS
             await cocotb.triggers.ClockCycles(self.dut.clk, 100, rising=True)
             ##############################DO NOT DELETE##################################
             if(TestDone == False):
-                # print(self.message_queue)
-                # print(self.output_mon.values)
-
-
-                # #lab2E1 : wait until queue is full
-                # inqsize = self.input_mon.values.qsize()
-                # if(inqsize != 0):
-                #     #print(inqsize)
-                #     pass
-                # if(inqsize >):
-                #     while(self.input_mon.values.empty() != True):
-                #         inval = await self.input_mon.values.get()
-                #         print(inval)
-                # #         if(int(inval["SigInB"]) == 1):
-                # #             iLastVar = True
-                #     pass
-
                 outqsize = self.output_mon.values.qsize()
                 if(outqsize > 1):
                     print(f"Outqsize = {outqsize}")
@@ -127,31 +105,6 @@ class MMC_TDC(MMC_TEMPLATE):
                     print("on est pret")
                     # print(self.input_mon.values) 
                     # print(self.output_mon.values)   
-                    self.model(self.input_mon.values.get(),outval)
-                    # if(int(outval["SigOutB"]) == 1):
-                        # oLastVar = True
-
-                # if( (iLastVar == True) and (oLastVar == True)):
-                #     if(int(outval["SigOutA"]) == 1):
-                #         print("o_match == TRUE")
-                #         assert True
-                #     else:
-                #         assert False
-
-                #     TestDone = True
-        """
-        actual = await self.output_mon.values.get()
-        expected_inputs = await self.input_mon.values.get()
-        expected = self.model(
-            InputsA=expected_inputs["SignalA"], InputsB=expected_inputs["SignalB"]
-        )
-
-        # compare expected with actual using assertions. Exact indexing must
-        # be adapted to specific case and model return value
-        assert actual["SignalC"] == expected[0]
-        assert actual["SignalD"] == expected[1]
-        """
-
-
-
-            # assert False running this might cause error
+                    is_pulse_width_valid =  self.model(self.input_mon.values.get(),outval)
+                    assert is_pulse_width_valid
+                    TestDone = True
