@@ -1,5 +1,10 @@
 import cocotb
 from bitarray.util import int2ba, ba2int
+from enum import Enum
+
+class Command(Enum):
+    READ = 0x0
+    WRITE = 0x1
 
 
 

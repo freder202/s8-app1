@@ -89,7 +89,7 @@ class MMC_CRC8(MMC_TEMPLATE):
         while True:
             ##############################DO NOT DELETE##################################
             # GIVE AT LEAST 1 CLOCK CYCLE THE GODDAM WHOLE TEST CRASH WITHOUT THIS
-            await cocotb.triggers.ClockCycles(self.dut.clk, 100, rising=True)
+            await cocotb.triggers.ClockCycles(self.dut.clk, 1000, rising=True)
             ##############################DO NOT DELETE##################################
 
             if(test_state == isSubTestDone.TEST_DONE):

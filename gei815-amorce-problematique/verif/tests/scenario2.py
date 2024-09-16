@@ -42,8 +42,8 @@ async def scenario2(dut):
         i = i + 1
         Thread_uart = cocotb.start_soon(coro=wait_reply(dut, uart_sink, message_queue))
         # Send read command
-        value = int(random.randint(0, 0xFF))
-        reg9 = uv.build_command_message(0x0, 0x0 + value, 0x0 +value)
+        value = int(random.randint(0, 0xFFFFFFFF))
+        reg9 = uv.build_command_message(uv.Command.READ.value, 0x9, 0x0 + value)
         print(f"[DEBUG] Loop {i+1} ------------------------")
         print(f"[DEBUG] Loop {i+1}: Sending command {hex(reg9)}")
         await uart_driver.write(reg9.buff)
