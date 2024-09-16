@@ -157,6 +157,7 @@ class MMC_CRC8(MMC_TEMPLATE):
                         print("[MMC_CRC8 CLASS -- Assertion] o_match == TRUE")
                         assert True
                     else:
+                        print("[MMC_CRC8 CLASS -- Assertion] o_match == FALSE")
                         assert False
 
                     test_state = isSubTestDone.TEST_DONE
