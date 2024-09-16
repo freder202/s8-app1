@@ -6,9 +6,6 @@ class Command(Enum):
     READ = 0x0
     WRITE = 0x1
 
-
-
-
 # Expects cocotb.binary.BinaryValue() argument
 def print_cocotb_BinaryValue(SomeValue):
     print("print Cocotb binary string : " + SomeValue.binstr)

@@ -18,9 +18,9 @@ import init
 
 # Decorator to tell cocotb this function is a coroutine
 @cocotb.test()
-async def scenario3(dut):
+async def crc8_scenario2(dut):
     
-    init.initDebug("scenario3 - CHECK send a good message then another with a bad crc")
+    init.initDebug("scenario2 - CHECK CRC8 with a load of 96 values")
 
     #FROM design/digital/UART/packet_merger.sv
     CRC8 = MMC.MMC_CRC8(dut.inst_packet_merger.inst_crc_calc)
@@ -37,7 +37,8 @@ async def scenario3(dut):
 
 
     # L1.E4 - Start thread for the reply function for the expected UART response.
-    for i in range(2):
+
+    for i in range(96):
         i = i + 1
         Thread_uart = cocotb.start_soon(coro=wait_reply(dut, uart_sink, message_queue))
         # Send read command
@@ -50,11 +51,6 @@ async def scenario3(dut):
 
         # Send CRC
         crc8 = uv.get_expected_crc(reg9.buff)
-        if(i == 2):
-            print(f"[DEBUG] CRC : {bin(crc8)}")
-            #crc8 = crc8 ^ 0xFFFF
-            crc8 =+ 1
-            print(f"[DEBUG] CRC : {bin(crc8)}")
         crc8bin = cocotb.binary.BinaryValue(value=crc8, n_bits=8, bigEndian=False)
         await uart_driver.write(crc8bin.buff)
         await uart_driver.wait()
@@ -98,4 +94,3 @@ async def wait_reply(dut, uart_sink, message_queue):
         print(f"[DEBUG] message type : {type(message)}")
         await message_queue.put((message, crc_bytes))
         return message
-    

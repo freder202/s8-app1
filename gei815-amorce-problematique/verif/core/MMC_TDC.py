@@ -16,21 +16,42 @@ from cocotb.log import SimLog
 
 from MMC_TEMPLATE import *
 
+# inst_tdc_channel_0(
+#         # .reset(reset),
+#         # .clk(clk),
+#         # .i_trigger(sipms[0]),
+#         # .i_enable_channel(TDC_en_if.enable_channels[0]),
+#         # .i_clear(tdc1_if.clear),
+#         # .o_busy(s_busy[0]),
+#         # .o_hasEvent(tdc1_if.hasEvent),
+#         # .o_chanID(tdc1_if.chan),
+#         # .o_timestamp(tdc1_if.timestamp),
+#         # .o_pulseWidth(tdc1_if.timeOverThreshold)
+# );
+
 #In this case dut is (starting from top) : dut.inst_packet_merger.inst_crc_calc
 class MMC_TDC(MMC_TEMPLATE):
    
     def __init__(self, dut) -> None:
         super().__init__(dut)
         self.input_mon = DataValidMonitor_Template(
-            clk=self.dut.clk,
-            valid=self.dut.i_valid,
-            datas=dict(SigInA=self.dut.i_data, SigInB=self.dut.i_last),
+            clk=self.dut.clk, # should this me the inst_tdc_channel_0 clk ?
+            valid=self.dut.inst_tdc_channel_0.reset,
+            datas=dict(
+             SigInA=self.dut.inst_tdc_channel_0.i_trigger, 
+             SigInB=self.dut.inst_tdc_channel_0.i_clear
+             ),
             Name="InputMonitor"
         )
         self.output_mon = DataValidMonitor_Template(
             clk=self.dut.clk,
-            valid=self.dut.o_done,
-            datas=dict(SigOutA=self.dut.o_match, SigOutB=self.dut.o_done),
+            valid=self.dut.inst_tdc_channel_0.o_hasEvent,
+            datas=dict(
+             SigOutA=self.dut.inst_tdc_channel_0.o_busy,
+             sigOutB=self.dut.inst_tdc_channel_0.o_chanID,
+             SigOutC=self.dut.inst_tdc_channel_0.o_timestamp,
+             SigOutD=self.dut.inst_tdc_channel_0.o_pulseWidth
+             ),
             Name="OutputMonitor"
         )
 
@@ -50,7 +71,9 @@ class MMC_TDC(MMC_TEMPLATE):
         TestDone = False
 
 
-        #TODO COLLECT DATA FROM int(inval["SigInA"]) and input it in a model then assert CRC
+        print("poil")
+
+        # #TODO COLLECT DATA FROM int(inval["SigInA"]) and input it in a model then assert CRC
         while True:
             # dummy await, allows to run without checker implementation and verify monitors
             ##############################DO NOT DELETE##################################
@@ -63,7 +86,7 @@ class MMC_TDC(MMC_TEMPLATE):
                 if(inqsize != 0):
                     #print(inqsize)
                     pass
-                if(inqsize == 7):
+                if(inqsize == 18):
                     while(self.input_mon.values.empty() != True):
                         inval = await self.input_mon.values.get()
                         print(inval)
@@ -86,18 +109,18 @@ class MMC_TDC(MMC_TEMPLATE):
                         assert False
 
                     TestDone = True
-                """
-                actual = await self.output_mon.values.get()
-                expected_inputs = await self.input_mon.values.get()
-                expected = self.model(
-                    InputsA=expected_inputs["SignalA"], InputsB=expected_inputs["SignalB"]
-                )
-    
-                # compare expected with actual using assertions. Exact indexing must
-                # be adapted to specific case and model return value
-                assert actual["SignalC"] == expected[0]
-                assert actual["SignalD"] == expected[1]
-                """
+        """
+        actual = await self.output_mon.values.get()
+        expected_inputs = await self.input_mon.values.get()
+        expected = self.model(
+            InputsA=expected_inputs["SignalA"], InputsB=expected_inputs["SignalB"]
+        )
+
+        # compare expected with actual using assertions. Exact indexing must
+        # be adapted to specific case and model return value
+        assert actual["SignalC"] == expected[0]
+        assert actual["SignalD"] == expected[1]
+        """
 
 
 

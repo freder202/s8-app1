@@ -9,20 +9,23 @@ from cocotb.triggers import Join, Timer
 from utilsVerif import print_cocotb_BinaryValue
 import utilsVerif as uv
 from cocotb.log import SimLog
-import MMC_CRC8 as MMC
+import MMC_TDC as MMC
 
+import utilsVerif as uv
 #Homemade module
 import init
 
+import cocotb.simulator
+
 # Decorator to tell cocotb this function is a coroutine
 @cocotb.test()
-async def scenario1(dut):
+async def tdc_scenario1(dut):
 
-    init.initDebug("scenario1 - LECTURE REGISTRE SERIAL")
+    init.initDebug("TDC scenario1 - LECTURE REGISTRE SERIAL")
 
     #FROM design/digital/UART/packet_merger.sv
-    CRC8 = MMC.MMC_CRC8(dut.inst_packet_merger.inst_crc_calc)
-    CRC8.start()
+    TDC = MMC.MMC_TDC(dut)
+    TDC.start()
 
     # L1.E4 - Ajouter l'initialisation des pattes d'entrée et de l'horloge
     await init.initReset(dut)
@@ -34,8 +37,11 @@ async def scenario1(dut):
     # L1.E4 - Start thread for the reply function for the expected UART response.
     Thread_uart = cocotb.start_soon(coro=t_uart_test(dut, uart_sink))
 
+    # TODO send the init 
+    # TODO send the enable channel 0
+
     # Send read command
-    reg9 = uv.build_command_message(0x0, 0x9, 0x00000000)
+    reg9 = uv.build_command_message(uv.Command.WRITE.value, 0x8, 0x01)
     print(f"[DEBUG] {hex(reg9)}")
     await uart_driver.write(reg9.buff)
     await uart_driver.wait()
@@ -46,17 +52,31 @@ async def scenario1(dut):
     await uart_driver.write(crc8bin.buff)
     await uart_driver.wait()
 
+    # entropic wait to settle 
+    await Timer(50,'ns') 
+    
+
+    timeTestedInNs = 2500 
+
+    dut.sipms[0].value = 1
+
+    await Timer(timeTestedInNs, 'ns') # 2.5 us
+
+    dut.sipms[0].value = 0
+
+    await Timer(2500, 'ns') # include 2 us + 1 clk + interpolation time 200ns
+    
     # L1.E4 ait for response to complete or for timeout
     # await Task_returnMessage
 
 
-    await Timer(1500, 'us')
+
+    await Timer(1, 'us')
     print("ici on fail cool")
     Thread_uart.kill()
 
 async def t_uart_test(dut, uart_sink):
     while(True):
-        
         Task_returnMessage = await cocotb.start(wait_reply(dut, uart_sink))
 
         packetSplitter = await Task_returnMessage
@@ -64,10 +84,6 @@ async def t_uart_test(dut, uart_sink):
         print(packetSplitter)
         print(hex(int(packetSplitter)))
         break;
-            
-        # if (hex(int(packetSpliter)) != hex(0x800badeface)) :
-        #     raise RuntimeError("Not = 0x800badeface")
-
 
 # L.E4 function to wait for response message
 async def wait_reply(dut, uart_sink):
@@ -95,5 +111,3 @@ async def wait_reply(dut, uart_sink):
         print("0x{0:0{width}x}".format(message.integer, width=12))
         print(f"[DEBUG] message type : {type(message)}")
         return message
-
-
