@@ -26,6 +26,7 @@ async def tdc_scenario1(dut):
     #FROM design/digital/UART/packet_merger.sv
     TDC = MMC.MMC_TDC(dut)
     TDC.start()
+    TDC.message_queue = {'time_tested' : [2500,'ns'] } # 2.5 us
 
     # L1.E4 - Ajouter l'initialisation des pattes d'entrée et de l'horloge
     await init.initReset(dut)
@@ -56,11 +57,9 @@ async def tdc_scenario1(dut):
     await Timer(50,'ns') 
     
 
-    timeTestedInNs = 2500 
-
     dut.sipms[0].value = 1
 
-    await Timer(timeTestedInNs, 'ns') # 2.5 us
+    await Timer(TDC.message_queue["time_tested"][0], TDC.message_queue["time_tested"][1]) # 2.5 us
 
     dut.sipms[0].value = 0
 
@@ -69,9 +68,7 @@ async def tdc_scenario1(dut):
     # L1.E4 ait for response to complete or for timeout
     # await Task_returnMessage
 
-
-
-    await Timer(1, 'us')
+    await Timer(150, 'us')
     print("ici on fail cool")
     Thread_uart.kill()
 

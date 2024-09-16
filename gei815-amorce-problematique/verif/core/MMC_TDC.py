@@ -31,9 +31,11 @@ from MMC_TEMPLATE import *
 
 #In this case dut is (starting from top) : dut.inst_packet_merger.inst_crc_calc
 class MMC_TDC(MMC_TEMPLATE):
+    
    
     def __init__(self, dut) -> None:
         super().__init__(dut)
+        self.message_queue = cocotb.queue.Queue()
         self.input_mon = DataValidMonitor_Template(
             clk=self.dut.clk, # should this me the inst_tdc_channel_0 clk ?
             valid=self.dut.inst_tdc_channel_0.reset,
@@ -48,18 +50,38 @@ class MMC_TDC(MMC_TEMPLATE):
             valid=self.dut.inst_tdc_channel_0.o_hasEvent,
             datas=dict(
              SigOutA=self.dut.inst_tdc_channel_0.o_busy,
-             sigOutB=self.dut.inst_tdc_channel_0.o_chanID,
+             SigOutB=self.dut.inst_tdc_channel_0.o_chanID,
              SigOutC=self.dut.inst_tdc_channel_0.o_timestamp,
              SigOutD=self.dut.inst_tdc_channel_0.o_pulseWidth
              ),
             Name="OutputMonitor"
         )
 
-        def model(self, InputsA: List[int], InputsB: List[int]) -> List[int]:
-        # equivalent model to HDL code # TODO FAIRE UN VRAI MODELE CRC8
-            model_result1 = 0
-            model_result2 = 1
-            return [model_result1, model_result2]
+
+    def _convert_message_queue_to_ps(self,time_fred):
+        if time_fred[1] == 'ns':
+            return time_fred[0] * 1000
+        elif time_fred[1] == 'us':
+            return time_fred[0] * 1000000
+        elif time_fred[1] == 'ms':
+            return time_fred[0] * 1000000000
+        elif time_fred[1] == 'ps':
+            return time_fred[0] * 1
+        else:
+            return 0
+
+    def model(self, InputsA: List[int], InputsB: List[int]) -> List[int]:
+    # equivalent model to HDL code # TODO FAIRE UN VRAI MODELE CRC8
+        model_result1 = 0
+        model_result2 = 1
+        
+        test_time_as_ps = self._convert_message_queue_to_ps(self.message_queue['time_tested'])
+        is_pulse_width_valid = (test_time_as_ps // 40 ) == int(InputsB['SigOutD'])
+        
+        print(test_time_as_ps // 40)
+        print(int(InputsB['SigOutD']))
+        
+        return [is_pulse_width_valid, model_result2]
             
 
     async def _checker(self) -> None:
@@ -81,34 +103,42 @@ class MMC_TDC(MMC_TEMPLATE):
             await cocotb.triggers.ClockCycles(self.dut.clk, 100, rising=True)
             ##############################DO NOT DELETE##################################
             if(TestDone == False):
-                #lab2E1 : wait until queue is full
-                inqsize = self.input_mon.values.qsize()
-                if(inqsize != 0):
-                    #print(inqsize)
-                    pass
-                if(inqsize == 18):
-                    while(self.input_mon.values.empty() != True):
-                        inval = await self.input_mon.values.get()
-                        print(inval)
-                        if(int(inval["SigInB"]) == 1):
-                            iLastVar = True
-                    pass
+                # print(self.message_queue)
+                # print(self.output_mon.values)
+
+
+                # #lab2E1 : wait until queue is full
+                # inqsize = self.input_mon.values.qsize()
+                # if(inqsize != 0):
+                #     #print(inqsize)
+                #     pass
+                # if(inqsize >):
+                #     while(self.input_mon.values.empty() != True):
+                #         inval = await self.input_mon.values.get()
+                #         print(inval)
+                # #         if(int(inval["SigInB"]) == 1):
+                # #             iLastVar = True
+                #     pass
 
                 outqsize = self.output_mon.values.qsize()
-                if(outqsize != 0):
+                if(outqsize > 1):
                     print(f"Outqsize = {outqsize}")
                     outval = await self.output_mon.values.get()
-                    if(int(outval["SigOutB"]) == 1):
-                        oLastVar = True
+                    print("on est pret")
+                    # print(self.input_mon.values) 
+                    # print(self.output_mon.values)   
+                    self.model(self.input_mon.values.get(),outval)
+                    # if(int(outval["SigOutB"]) == 1):
+                        # oLastVar = True
 
-                if( (iLastVar == True) and (oLastVar == True)):
-                    if(int(outval["SigOutA"]) == 1):
-                        print("o_match == TRUE")
-                        assert True
-                    else:
-                        assert False
+                # if( (iLastVar == True) and (oLastVar == True)):
+                #     if(int(outval["SigOutA"]) == 1):
+                #         print("o_match == TRUE")
+                #         assert True
+                #     else:
+                #         assert False
 
-                    TestDone = True
+                #     TestDone = True
         """
         actual = await self.output_mon.values.get()
         expected_inputs = await self.input_mon.values.get()
