@@ -69,7 +69,7 @@ class DataValidMonitor_Template:
         Return value is what is stored in queue. Meant to be overriden by the user.
         """
         # possible messages to test monitor
-        self.log.info(f"[{self.Name}] Data sampled!")
+        # self.log.info(f"[{self.Name}] Data sampled!")
         # self.log.info({name: handle.value for name, handle in self._datas.items()})
 
 
