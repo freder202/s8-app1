@@ -26,7 +26,7 @@ async def tdc_scenario1(dut):
     #FROM design/digital/UART/packet_merger.sv
     TDC = MMC.MMC_TDC(dut)
     TDC.start()
-    TDC.message_queue = {'time_tested' : [2500,'ns'] } # 2.5 us
+    TDC.message_queue = {'time_tested' : [2500,'ns'] ,'isTestSupposedToFail' : False} # 2.5 us
 
     # L1.E4 - Ajouter l'initialisation des pattes d'entrée et de l'horloge
     await init.initReset(dut)
