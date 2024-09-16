@@ -49,10 +49,11 @@ class MMC_TDC(MMC_TEMPLATE):
             clk=self.dut.clk,
             valid=self.dut.inst_tdc_channel_0.o_hasEvent,
             datas=dict(
-             SigOutA=self.dut.inst_tdc_channel_0.o_busy,
-             SigOutB=self.dut.inst_tdc_channel_0.o_chanID,
-             SigOutC=self.dut.inst_tdc_channel_0.o_timestamp,
-             SigOutD=self.dut.inst_tdc_channel_0.o_pulseWidth
+             SigOutA=self.dut.inst_tdc_channel_0.o_hasEvent,
+             SigOutB=self.dut.inst_tdc_channel_0.o_busy,
+             SigOutC=self.dut.inst_tdc_channel_0.o_chanID,
+             SigOutD=self.dut.inst_tdc_channel_0.o_timestamp,
+             SigOutE=self.dut.inst_tdc_channel_0.o_pulseWidth
              ),
             Name="OutputMonitor"
         )
@@ -72,14 +73,12 @@ class MMC_TDC(MMC_TEMPLATE):
 
     def model(self, InputsA: List[int], InputsB: List[int]) -> List[int]:
     # equivalent model to HDL code # TODO FAIRE UN VRAI MODELE CRC8
-        model_result1 = 0
-        model_result2 = 1
         
         test_time_as_ps = self._convert_message_queue_to_ps(self.message_queue['time_tested'])
-        is_pulse_width_valid = (test_time_as_ps // 40 ) == int(InputsB['SigOutD'])
+        is_pulse_width_valid = (test_time_as_ps // 40 ) == int(InputsB['SigOutE'])
         
         print(test_time_as_ps // 40)
-        print(int(InputsB['SigOutD']))
+        print(int(InputsB['SigOutE']))
         
         return [is_pulse_width_valid]
             
@@ -100,11 +99,11 @@ class MMC_TDC(MMC_TEMPLATE):
             if(TestDone == False):
                 outqsize = self.output_mon.values.qsize()
                 if(outqsize > 1):
-                    print(f"Outqsize = {outqsize}")
+                    # print(f"Outqsize = {outqsize}")
                     outval = await self.output_mon.values.get()
-                    print("on est pret")
-                    # print(self.input_mon.values) 
-                    # print(self.output_mon.values)   
-                    is_pulse_width_valid =  self.model(self.input_mon.values.get(),outval)
+                    assert outval["SigOutA"] == 1 # o_hasEvent 
+                    inval = await self.input_mon.values.get()
+                    print("on est pret (toute les donnees du output mon sont la)")
+                    is_pulse_width_valid =  self.model(inval,outval)
                     assert is_pulse_width_valid
                     TestDone = True
