@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<context-file-root>
+   <config_vmgr config_show_excluded="true"
+                config_vplan_ext_default_vplan_tree="true"
+                rerun_runs_filter="latest"/>
+   <information flow="CUSTOM_FLOW" name="All Runs 1" version="23.03"/>
+   <session name="example_session.bilf0901.24_09_16_16_35_22_2335"/>
+   <activity domain_entity_name="crc8_scenario2"
+             domain_entity_tree_path="0/0/0/8"
+             domain_entity_type="TEST_MODEL"
+             name="Tests"
+             page_name="TEST_HIERARCHY"
+             selected_entity_name=""
+             type="RUNS_SUMMARY"
+             user_name="ngv_root_user"
+             view_name="Test_Hierarchy"/>
+   <activity name="Runs Analysis"
+             page_name="RUNS"
+             selected="1"
+             selected_entity_name=""
+             type="RUNS"
+             user_name="ngv_root_user"
+             view_name="Default"/>
+</context-file-root>
