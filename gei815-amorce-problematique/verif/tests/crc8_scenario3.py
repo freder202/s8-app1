@@ -25,7 +25,7 @@ async def crc8_scenario3(dut):
     #FROM design/digital/UART/packet_merger.sv
     CRC8 = MMC.MMC_CRC8(dut.inst_packet_merger.inst_crc_calc)
     CRC8.start()
-    CRC8.message_queue = {"good_test" : True}
+    CRC8.message_queue = {"good_test" : False}
         
 
     # L1.E4 - Ajouter l'initialisation des pattes d'entrée et de l'horloge
@@ -35,11 +35,11 @@ async def crc8_scenario3(dut):
     uart_driver = UartSource(dut.in_sig, baud=1000000, bits=8)
     uart_sink   = UartSink(dut.out_sig, baud=1000000, bits=8)
 
-
+    message_queue = cocotb.queue.Queue()
     # L1.E4 - Start thread for the reply function for the expected UART response.
     for i in range(2):
         i = i + 1
-        Thread_uart = cocotb.start_soon(coro=wait_reply(dut, uart_sink, CRC8.message_queue))
+        Thread_uart = cocotb.start_soon(coro=wait_reply(dut, uart_sink, message_queue,CRC8.message_queue))
         # Send read command
         value = int(random.randint(0, 0xFFFFFFFF))
         reg9 = uv.build_command_message(uv.Command.READ.value, 0x9, 0x0 + value)
@@ -63,6 +63,9 @@ async def crc8_scenario3(dut):
 
         # Wait for response to complete or for timeout
         packetSplitter = await Thread_uart
+        if packetSplitter is None:
+            print(f"[DEBUG] Loop {i+1}: Received response None")
+            break
         print(f"[DEBUG] Loop {i+1}: Received response {hex(int(packetSplitter))}")
         message, crc = await message_queue.get()
         
@@ -74,7 +77,7 @@ async def crc8_scenario3(dut):
     print("ici on a fini cool")
 
 
-async def wait_reply(dut, uart_sink, message_queue):
+async def wait_reply(dut, uart_sink, message_queue,message_queue2):
     # Non-infinite wait loop. Throw cocotb exception if timeout is reached (to do)
     for x in range(0, 100):
         if uart_sink.count() >= 7:  # 6 octets du message + le CRC
@@ -85,7 +88,8 @@ async def wait_reply(dut, uart_sink, message_queue):
         print("Timeout")
         logger = SimLog("cocotb.Test")
         logger.info("Timeout for wait reply")
-        if self.message_queue["good_test"] == False:
+        print(message_queue2['good_test'])
+        if message_queue2["good_test"] == False:
             print("ist normal to crash the crc was not good")
         else:
             raise RuntimeError("Timeout for wait reply")
