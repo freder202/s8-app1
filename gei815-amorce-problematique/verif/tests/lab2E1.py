@@ -17,14 +17,11 @@ import init
 # Decorator to tell cocotb this function is a coroutine
 @cocotb.test()
 async def lab2E1(dut):
-
-
     init.initDebug("lab2E1")
 
     #FROM design/digital/UART/packet_merger.sv
     CRC8 = MMC.MMC_CRC8(dut.inst_packet_merger.inst_crc_calc)
     CRC8.start()
-
 
     # L1.E4 - Ajouter l'initialisation des pattes d'entrée et de l'horloge
     await init.initReset(dut)
@@ -35,7 +32,6 @@ async def lab2E1(dut):
 
     # L1.E4 - Start thread for the reply function for the expected UART response.
     Task_returnMessage = await cocotb.start(wait_reply(dut, uart_sink))
-
 
     # Send read command
     reg9 = uv.build_command_message(0x0, 0x9, 0x00000000)

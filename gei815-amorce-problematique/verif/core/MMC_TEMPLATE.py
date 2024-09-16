@@ -85,6 +85,7 @@ class MMC_TEMPLATE(object):
             raise RuntimeError("Monitor already started")
         self.input_mon.start()
         self.output_mon.start()
+        
         self._checkercoro = cocotb.start_soon(self._checker())
 
     def stop(self) -> None:

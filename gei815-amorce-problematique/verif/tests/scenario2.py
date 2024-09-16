@@ -34,14 +34,16 @@ async def scenario2(dut):
     uart_sink   = UartSink(dut.out_sig, baud=1000000, bits=8)
 
     message_queue = cocotb.queue.Queue()
+
+
     # L1.E4 - Start thread for the reply function for the expected UART response.
 
     for i in range(96):
         i = i + 1
         Thread_uart = cocotb.start_soon(coro=wait_reply(dut, uart_sink, message_queue))
         # Send read command
-        value = random.randint(0, 0xFFFFFFFF)
-        reg9 = uv.build_command_message(0x0, 0x0 + i, 0x0 +i)
+        value = int(random.randint(0, 0xFF))
+        reg9 = uv.build_command_message(0x0, 0x0 + value, 0x0 +value)
         print(f"[DEBUG] Loop {i+1} ------------------------")
         print(f"[DEBUG] Loop {i+1}: Sending command {hex(reg9)}")
         await uart_driver.write(reg9.buff)
@@ -53,13 +55,16 @@ async def scenario2(dut):
         await uart_driver.write(crc8bin.buff)
         await uart_driver.wait()
 
+
         # Wait for response to complete or for timeout
         packetSplitter = await Thread_uart
         print(f"[DEBUG] Loop {i+1}: Received response {hex(int(packetSplitter))}")
         message, crc = await message_queue.get()
+        
+        
         # print(f"[LOOP END] -- data: 0x{message} -- crc: 0x{crc}")
         # print(f"[LOOP END] -- data: {message} -- crc: {crc}")
-        await CRC8._checker()       
+       
 
     print("ici on a fini cool")
 
